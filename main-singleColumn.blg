@@ -1,0 +1,52 @@
+This is BibTeX, Version 0.99d (TeX Live 2015/dev/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: main-singleColumn.aux
+The style file: model2-names.bst
+Database file #1: refs.bib
+Repeated entry---line 157 of file refs.bib
+ : @article{Lumley1967
+ :                    ,
+I'm skipping whatever remains of this entry
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+You've used 22 entries,
+            2990 wiz_defined-function locations,
+            866 strings with 10483 characters,
+and the built_in function-call counts, 12661 in all, are:
+= -- 906
+> -- 508
+< -- 12
++ -- 206
+- -- 174
+* -- 1277
+:= -- 1923
+add.period$ -- 66
+call.type$ -- 22
+change.case$ -- 168
+chr.to.int$ -- 22
+cite$ -- 22
+duplicate$ -- 1001
+empty$ -- 944
+format.name$ -- 232
+if$ -- 2311
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 177
+newline$ -- 125
+num.names$ -- 88
+pop$ -- 425
+preamble$ -- 1
+purify$ -- 146
+quote$ -- 0
+skip$ -- 308
+stack$ -- 0
+substring$ -- 414
+swap$ -- 607
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 198
+warning$ -- 0
+while$ -- 72
+width$ -- 0
+write$ -- 304
+(There was 1 error message)

@@ -1,0 +1,135 @@
+\documentclass[main-singleColumn.tex]{subfiles}
+\begin{document}
+%----------------------------------------------------------------------------------
+%---------------------------------- INTRO -----------------------------------------
+%----------------------------------------------------------------------------------
+\section{POD-PCE based predictor}
+\label{section:methodology}
+\subsection{The coupling}
+\label{subsection:predictor}
+Let $u(\mathbf{X},t_1)$ be a measured field defined for a time $t_1$ for geographical points $\mathbf{X}=\{x_1,...x_M\}$. Let $(\theta_1,...,\theta_V)$ be a set of measured forcing parameters. We want to elaborate a dynamical model $\mathcal{H}$, that gives an estimation of a future state $u(\mathbf{X},t_2)$ from the knowledge of the past state and the estimation of the forcing parameters on the  time interval $[t_1,t_2]$, as in Eq. \ref{eq:prediction:model}.
+
+\begin{equation}
+  u(\mathbf{X},t_2) = \mathcal{H} (u(\mathbf{X},t_1),t_2-t_1,\theta_1,...,\theta_V)
+  \label{eq:prediction:model}
+\end{equation}
+
+We present hereby a methodology for constucting a data-based model $\mathcal{H}$, using a coupling between POD and PCE. In fact, as we are able to project the future state on the POD basis as follows:
+
+\begin{equation}
+  u(\mathbf{X},t_2) \approx \sum_{k=1}^{d} v_k(t_2) \phi_k(\mathbf{X}) \qquad ,
+\end{equation}
+
+Or, in the KLT formulation, as follows:
+\begin{equation}
+  u(\mathbf{X},t_2) \approx \sum_{k=1}^{d} a_k(t_2) \sqrt{\frac{\lambda_k}{N}} \phi_k(\mathbf{X}) \qquad ,
+\end{equation}
+
+Then for each $1 \leq k \leq d$, we could construct a dynamical model $H_k$ for $a_k$ as in  Eq. \ref{eq:prediction:minimodel}, using PCE.
+
+\begin{equation}
+  a_k(t_2) = H_k (a_k(t_1),t_2-t_1,\theta_1,...,\theta_V)
+  \label{eq:prediction:minimodel}
+\end{equation}
+
+Therefore, the model $\mathcal{H}$ in  Eq. \ref{eq:prediction:model} would be written as in Eq. \ref{eq:prediction:fullmodel}.
+
+\begin{equation}
+ \mathcal{H} (u(\mathbf{X},t_1),t_2-t_1,\theta_1,...,\theta_V) \approx \sum_{k=1}^{d} H_k (a_k(t_1),t_2-t_1,\theta_1,...,\theta_V) \sqrt{\frac{\lambda_k}{N}} \phi_k(\mathbf{X})
+  \label{eq:prediction:fullmodel}
+  \end{equation}
+
+
+\subsection{Adapted sensitivity analysis}
+
+The methodology presented in Subsection \ref{subsection:sensitivity} is adapted for the analysis of each model $H_k$, but does not put the contributions of each model's inputs in perspective with those of the other modes. \\
+
+In order to rank all the polynomial contributions that are involved in the prediction of the final field $u(\mathbf{X},t)$, via each PCE model $H_k$, the calculation of generalized weights is proposed. \\
+
+For the construction of the each model $H_k$ that approximates the temporal signal $a_k$, let $\left\{ \zeta_{\underline{\alpha}}^k \right\}_{|\underline{\alpha}| \leq P_k}$ be the set of multivariate polynomials deduced on the input variables $(a_k(t_1),t_2-t_1,\theta_1,...,\theta_V)$. These multivariate polynomials are multiplied by the coefficients $\left\{ c_{\underline{\alpha}}^k \right\}_{|\underline{\alpha}| \leq P_k}$ in the model deduced using LARS algorithm, with $P_k$ the related polynomial degree. Each model $H_k$ can be written as $\sum_{|\underline{\alpha}| \leq P_k} c_{\underline{\alpha}}^k  \zeta_{\underline{\alpha}}^k $. Therefore, the final model $\mathcal{H}$ as in Eq. \ref{eq:prediction:fullmodel} reads:
+\begin{equation}
+   \mathcal{H} (u(\mathbf{X},t_1),t_2-t_1,\theta_1,...,\theta_V) \approx \sum_{k=1}^{d} a_k(t_1) \sqrt{\frac{\lambda_k}{N}} \phi_k(\mathbf{X}) \approx \sum_{k=1}^{d} \left( \sum_{|\underline{\alpha}| \leq P_k} c_{\underline{\alpha}}^k  \zeta_{\underline{\alpha}}^k \right)  \sqrt{\frac{\lambda_k}{N}} \phi_k(\mathbf{X})
+  \end{equation}
+
+In Eq. \ref{eq:sensitivity:weights}, the contribution of each $ \zeta_{\underline{\alpha}}^k$ in $H_k$, and therefore in the prediction of $a_k$, is calculated via the weights calculated as follows:
+\begin{equation}
+  w_{\zeta_{\underline{\alpha}}^k} = \dfrac{|c_{\underline{\alpha}}^k|}{ \sum_{|\underline{\beta}| \leq P} |c_{\underline{\beta}}^k|}
+\end{equation}
+
+As the families $\{a_k\}_{k=1}^d$ and $\{\phi_k\}_{k=1}^d$ are bi-orthonormal, implying that $\forall k \in \{1,...,d\} \quad ||a_k||_{\mathbb{R}^N}=1$ and $||\phi_k||_{\mathbb{R}^M}=1$, the weights $w_{\zeta_{\underline{\alpha}}^k}$ can be calibrated by the multiplicative coefficients $\sqrt{\lambda_k/N}$. We therefore propose the computation of generalized weights as:
+\begin{equation}
+  \label{eq:sensitivity:generalizedWeights}
+  W_{\zeta_{\underline{\alpha}}^k} = \dfrac{w_{\zeta_{\underline{\alpha}}^k}*\sqrt{\frac{\lambda_k}{N}}}{ \sum_{e=1}^d \sqrt{\frac{\lambda_e}{N}}} = \dfrac{|c_{\underline{\alpha}}^k|\sqrt{\frac{\lambda_k}{N}}}{ \left( \sum_{|\underline{\beta}| \leq P} |c_{\underline{\beta}}^k| \right) \left(\sum_{e=1}^d \sqrt{\frac{\lambda_e}{N}}\right)}
+\end{equation}
+
+And we have:
+\begin{equation}
+  \begin{tabular}{m{2.5cm} m{10cm}}
+    $\sum_{k=1}^d \sum_{|\underline{\alpha}| \leq P} W_{\zeta_{\underline{\alpha}}^k}$ & $= \sum_{k=1}^d \sum_{|\underline{\alpha}| \leq P} \left(  \dfrac{|c_{\underline{\alpha}}^k|\sqrt{\frac{\lambda_k}{N}}}{ \left( \sum_{|\underline{\beta}| \leq P} |c_{\underline{\beta}}^k| \right) \left(\sum_{e=1}^d \sqrt{\frac{\lambda_e}{N}}\right)}\right)$ \\
+    & \\
+    & $= \sum_{k=1}^d \left(\dfrac{\sqrt{\frac{\lambda_k}{N}}}{\left( \sum_{|\underline{\beta}| \leq P} |c_{\underline{\beta}}^k| \right) \left(\sum_{e=1}^d \sqrt{\frac{\lambda_e}{N}}\right)} \left( \sum_{|\underline{\alpha}| \leq P}|c_{\underline{\alpha}}^k| \right) \right)$ \\
+
+    %$=  \sum_{k=1}^d \dfrac{\sqrt{\frac{\lambda_k}{N}}{ \left( \sum_{|\underline{\beta}| \leq P} |c_{\underline{\beta}}^k| \right) \left(\sum_{e=1}^d \sqrt{\frac{\lambda_e}{N}}\right)}  \sum_{|\underline{\alpha}| \leq P}|c_{\underline{\alpha}}^k| $\\
+    & $= 1$
+  \end{tabular}     
+\end{equation}
+
+Which allows to rank the multivariate polynomials alltogether.
+
+
+\subsection{Accuracy estimation}
+\label{subsection:accuracy}
+There are two determining parts in the POD-PCE learning process. First, the PCE calibration $H_k(t)$ of each mode $a_k(t)$ should be as accurate as possible. Second the reconstructed field $\sum_{k=1}^{d} H_k(t) \sqrt{\frac{\lambda_k}{N}} \phi_k(\mathbf{X})$ for a given rank $d$ should be as close to the real field $Z(x,t)$ as possible.
+
+In order to check the distance between each mode and its PCE approximate, a \textit{generalization error} can be calculated as:
+\begin{equation}
+  \delta = \mathbb{E} \left[ (a_k(t) - H_k(t))^2 \right]
+  \end{equation}
+
+This error, as explained by \cite{Blatman2009} can be estimated as in Eq. \ref{eq:empiricalError}, called the \textit{empirical error}, where $N$ is the number of realizations of the output variable $a_k$, here the POD mode of rank $k$. 
+\begin{equation}
+  \label{eq:empiricalError}
+  \delta \approx \delta_{emp} = \dfrac{1}{N} \sum_{j=1}^N \left( a_k(t_j) - H_k(t_j) \right)^2 
+  \end{equation}
+
+Its relative estimate can be calculated as in Eq. \ref{eq:relativeEmpiricalError}.
+\begin{equation}
+  \label{eq:relativeEmpiricalError}
+  \epsilon \approx \dfrac{\delta_{emp}}{\mathbb{V}[a_k]}
+\end{equation}
+
+For the final prediction phase, the distance between reality $Z$ and the POD-PCE approximation $\mathcal{H}$ at time $t_j$ can be estimated by the relative Root Mean Squared Error (RMSE) as in Eq \ref{eq:relativeRMSE} where $(x_i)_{i=1,...,M}$ are the space coordinates over which the real field is defined.
+\begin{equation}
+  \label{eq:relativeRMSE}
+    RMSE(Z,\mathcal{H})(t_j) = \sum_{i=1}^M \dfrac{(Z(x_i,t_j)-\mathcal{H}(x_i,t_j))^2}{(Z(x_i,t_j))^2}
+\end{equation}
+
+The mean error in time can therefore be estimated as:
+\begin{equation}
+  \label{eq:timeAveragedRelativeRMSE}
+    \text{time Averaged - } RMSE(Z,\mathcal{H}) = \dfrac{1}{N} \sum_{j=1}^N RMSE(Z,\mathcal{H})(t_j)
+\end{equation}
+
+
+
+%\subsection{Methodology}
+
+%\subsection{Algorithm illustration}
+%separate set to : training set + prediction set \\
+
+%Learning step on training set\\
+%1 - perform POD and store POD basis \\
+%2 - learn one PCE per temporal coefficient\\
+
+%Qualification step on prediction set\\
+%2 - For each measurement : estimate prediction of temporal coefficient using associated PCE \\
+%3 - Reconstitute field prediction: multiply coefficient by POD basis element and sum\\
+%4 - Accuracy analysis: Compare to real field\\
+
+%Comment on training set size selection. 
+
+%\subsection{Discussion about accuracy analysis}
+%\subsubsection{Errors calculation}
+%---------------------------------------------------------------------------
+
+\end{document}

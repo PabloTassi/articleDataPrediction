@@ -1,0 +1,111 @@
+\documentclass[main-singleColumn.tex]{subfiles}
+\begin{document}
+%----------------------------------------------------------------------------------
+%---------------------------------- INTRO -----------------------------------------
+%----------------------------------------------------------------------------------
+\newpage
+\section{Sediment dynamics}
+\label{section:application}
+\subsection{The context}
+The analyzed data are measured in the context of a power plant water intake monitoring. The purpose of the water intake channel is to ensure enough water supply for the cooling process of the power plant, via a pumping system. The plants are therefore constructed near to a natural water source. \\
+
+The water intakes can be subject to sediment arrivals which decreases their cooling capacity. Sedimentation processes in nearshore channels is a well-known issue in harbors for example, and imply frequent dredging interventions characterized by high operational costs and hindered by tight scheduling. One of the challenges is therefore to characterize the sediment dynamics observed in a settled intake in order to optimize dredging operations. The final aim is to establish a dynamical model that emulates the morphodynamics, by linking various forcing parameters to the evolution of the bed elevations in the channel.
+
+\subsection{Case and data description}
+\label{subsection:data}
+
+The intake of interest settles in a coastal environment (Figure \ref{fig:case:intake}). Its upstream is connected to the sea by a straight portion, followed by a bent part with a varying width and a final straight part connected to a pumping system.
+
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+    \includegraphics[trim={10cm 4cm 8cm 1cm},clip,scale=0.3]{figs/case/Intake-Scheme-big.jpg}
+    \caption{Schematic drawing of the studied channel.}
+    \label{fig:case:intake}
+\end{figure}
+
+The region is macrotidal. The tidal currents are intense and induce tidal mixing nearshore which stirs the sediments up. The wind has a considerable influence because of the small depths in the studied area. It forces a constraint on the free surface of the sea, which generates strong fluctuations (wind waves) and causes resuspension of sediments in the bottom. Additional currents can be pointed out: longshore and rip currents induced by waves arriving at a certain angle to the coast, causing longshore drift and mobilization of beaches sediments.  \\ 
+
+The sediment dynamics outside the intake can be summed up as follows: Sediments are stirred up due to the waves effect. The waves threshold of action depends on the sediments size. Under storm conditions, the waves create enough constraint to put a bigger amount of sediments in motion. The action of waves offshore is took over by the action of tidal currents neashore, as they ensure a continuous transport of sediments along the coast, for example through the longshore drift. At low tide, the action of waves is amplified, because the wind constraint on the free surface is transmitted to the bottom layer with less energy loss, thus helping the waves to put more constraint on the bottom. Finally, the waves take over again by the coast, as their breaking causes the mobilization of beaches sediments. There is an obvious interaction between the tidal effect and the action of wind and waves, as well as a hand-off from waves to tide and from tide to waves depending on the situation. In addition, the previous state of the channel also plays an important role as the available space for the sediments deposition depends on the initial depths that are increased when a dredging occurs. The dredging information are also important to understand the observed depositions. \\
+
+The morphodynamics are consequently non-linear and can be discontinuous (threshold of movement depending on the sediments sizes). The forcings that are likely to be influential are considered in this work, via the quantitative indicators summed up in Table \ref{table:data:frequency}.
+
+
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+\begin{table}[pos=H]
+  \begin{center}
+  \begin{tabular}{ | M{2.6cm} | M{2.5cm}| M{2.2cm} |  M{2.5cm} | M{4cm} |}
+    \hline
+    \textbf{Variable} & \textbf{Frequency of data} & \textbf{Covered period} & \textbf{Source of data} & \textbf{Spatial coverage} \\
+    \hline
+    Bottom elevations & Each 2 weeks & 2005 - 2018 & Plant operator & Mono-Beam (numerous profiles, multiple points) inside the channel. \\
+    \hline
+    Pumping flowrates & Daily & 2007-2018 & Plant operator & 1D information \\
+    \hline
+    Dredging dates & Each 6 months & 2007-2018 & Plant operator & 1D information \\
+    \hline
+    Dredging volumes & Each 6 months & 2007-2018 & Plant operator & 1D information \\
+    \hline
+    Tidal levels & Hourly & 2009-2018 & \cite{Refmar} & Nearest tidal gauge\\
+    \hline
+    Wind direction & Three-hourly & 2009-2018 & METEO-FRANCE & A point from the grid of the coastal wave model VAG \\
+    \hline
+    Wind velocity & Three-hourly & 2009-2018 & METEO-FRANCE & A point from the grid of the coastal wave model VAG \\
+    \hline
+    Waves period & Three-hourly & 2009-2018 & METEO-FRANCE & A point from the grid of the coastal wave model VAG \\
+    \hline
+    Waves height & Three-hourly & 2009-2018 & METEO-FRANCE & A point from the grid of the coastal wave model VAG \\
+    \hline
+    Waves direction & Three-hourly & 2009-2018 & METEO-FRANCE & A point from the grid of the coastal wave model VAG \\
+    \hline
+\end{tabular}
+    \caption{Summary of the used measurements, their frequencies and periods as well as sources and spatial coverage.}
+    \label{table:data:frequency}
+  \end{center}
+\end{table}
+
+\vspace{-0.5cm}
+
+The first objective is to analyze the morphodynamics and to investigate how the forcings impact them. The measurements in Table \ref{table:data:frequency} do not have the same frequencies. A solution for the homogenization of frequencies is to reduce the measured data to representative statistics over the sedimentation/silting interval $\Delta t$ that separates two bottom elevations measurements, as represented in Table \ref{table:data:statistics}.
+
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+\begin{table}[pos=H]
+  \begin{center}
+  \begin{tabular}{ | M{2.6cm} | M{3cm}| M{8cm} |}
+    \hline
+    \textbf{Variable} & \textbf{Considered reduced statistics} & \textbf{Calculation over $\Delta t$} \\
+    \hline
+    Pumping flowrates & $Qmean$ & Average \\
+    \hline
+    Dredging periods & $Dp$ & Time laps since last dredging\\
+    \hline
+    Dreding volumes & $Dv$ & Last dredged volume \\
+    \hline
+    Tidal level & $\textbf{TLmean}$ & Average Low Tide\\
+    & $TLmin$ & Minimum Low Tide \\
+    & $TLrange$ & Maximum tidal range \\
+    & $TLstd$ & Standard deviation \\
+    \hline
+    Wind direction & $Wdir$ & Average direction weighted by wind velocity\\
+    \hline
+    Wind velocity & $Wmean$ & Average \\
+    \hline
+    Waves period & $\textbf{Wvper}$ & Average period weighted by the wave heights\\
+    \hline
+    Waves height & $\textbf{WvH}$ & Average \\
+    & $Wvstd$ & Standard deviation\\
+    & $\textbf{Wv2m}$ & Average wave height exceeding $2m$ thresold weighted by the associated periods \\
+    & $\textbf{Wv2m}\%$ & Percentage of wave height exceeding the $2m$ threshold \\
+    \hline
+    Waves direction & $\textbf{Wvdir}$ & Average direction weighted by wave heights and associated periods \\
+    \hline
+\end{tabular}
+    \caption{The considered reduced variables over the silting periods. Written in bold letters are the variables recommended by sediment transport expertise.}
+    \label{table:data:statistics}
+  \end{center}
+\end{table}
+\vspace{-0.5cm}
+
+For the prediction of a given bottom elevation state, the considered forcing variables $(\theta_1,...,\theta_V)$ as discussed in \ref{subsection:predictor}, are therefore these representative statistics over the silting periods. We end up with a number $V=15$ of forcings
+
+\end{document}

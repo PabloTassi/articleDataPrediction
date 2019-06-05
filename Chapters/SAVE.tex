@@ -1,0 +1,41 @@
+\subsubsection{Convergence analysis}
+    \label{subsubsection:POD:convergence}
+A bootstrap convergence analysis is performed on the explained variance percentages using a Bootstrap of size 10. The results are shown in the Figure \ref{fig:POD:convergence:eV}. The convergence and the tightening of the confidence intervals when increasing the matrix size are clear for this first four modes. However, whereas the confidence interval represents at most an error of $\pm 0.6 \%$ around the mean for the first mode, it goes up to $\pm 10\%$ for the fourth. Furthermore, the third and fourth modes represented variance percentages are intentionally represented on the same scale, in order to show that their confidence intervals can overlap, which means that their positions in the POD basis can be exchanged. 
+\begin{figure}[pos=H]
+  \centering
+  %gauche bas droite haut
+    \includegraphics[trim={0cm 1.5cm 0cm 0.5cm},clip,scale=0.6]{figs/results/POD/convergence/percent_1_2_convergence.png} \\
+     \includegraphics[trim={0cm 0cm 0cm 0.4cm},clip,scale=0.6]{figs/results/POD/convergence/percent_3_4_convergence.png}
+    \caption{Convergence and confidence intervals of the first four explained variance percentages, using 10 bootstraps.}
+    \label{fig:POD:convergence:eV}
+\end{figure}
+
+To investigate the possible ranking changes in the POD basis, a bootstrap convergence analysis is performed on the value defined in Equation \ref{eq:eR}, called the eigen rate. It is a measure of the distance between successive eigen values.
+\begin{equation}
+\label{eq:eR}
+\Delta\lambda_k = \frac{\lambda_k}{\lambda_k-\lambda_{k+1}}
+\end{equation}
+First, for an ordered eigen basis, this rate is always greater than 1, for significant modes (i.e $\lambda_k>\lambda_k+1>0$). When $\lambda_k$ is significantly greater than $\lambda_{k+1}$, the eigen rate $\Delta\lambda_k$ is close to 1, because the value $(\lambda_k-\lambda_{k+1})$ tends to $\lambda_k$. Conversely, the further $\Delta\lambda_k$ gets from 1, the smaller the difference is between the eigen values $k$ and $k+1$, which means that the associated POD basis members have close explained variance percentages, and that they can potentially exchange positions. Furthermore, for significant modes, we have: $\lambda_{k+1} = \frac{\Delta\lambda_k -1}{\Delta\lambda_k}\lambda_k$.
+
+The results of the first four eigen rates are shown in the Figure \ref{fig:POD:convergence:eR}.
+\begin{figure}[pos=H]
+  \centering
+  %gauche bas droite haut
+    \includegraphics[trim={0cm 1.5cm 0cm 0.5cm},clip,scale=0.6]{figs/results/POD/convergence/eigenRate_1_2_convergence.png} \\
+     \includegraphics[trim={0cm 0cm 0cm 0.4cm},clip,scale=0.6]{figs/results/POD/convergence/eigenRate_3_4_convergence.png}
+    \caption{Convergence and confidence intervals of the first four eigen rates, using 10 bootstraps.}
+    \label{fig:POD:convergence:eR}
+\end{figure}
+
+The first eigen rate is around $1.03$, i.e is close to the value 1, its convergence is clear and the confidence interval tightens around the mean value. The maximal bound is at most around $1.04$ starting from sample size $100$, which means that $\lambda_2 \approx 3.8\% \times \lambda_1$. There is no chance that these two first modes exchange positions. The same conclusions stand for the second eigen rate, that reaches a maximum of $2.5$ starting from sample size $100$. This value is indead farther from $1$, and indicates that $\lambda_3 \approx 60\% \times \lambda_2$. Here, it is very unlikely that modes 2 and 3 exchange positions, but one can notice that the gap gets exponentially smaller. For the third and fourth eigen rates, the convergence is not clear. For example, the fourth rate maximum is about $27$ for sample size $146$, meaning that $\lambda_4 \approx 96\% \times \lambda_5$. \\
+
+In order to check the convergence of the related spatial patterns, we first calculate a reference POD basis from the maximum size matrix, called the reference POD basis. Then, for each random bootstrap draw, a RMSE is calculated between the obtained POD basis members and the reference members. The maximal RMSE obtained for each sample size are plotted in the Figure \ref{fig:POD:convergence:spatialRMSE}.
+\begin{figure}[pos=H]
+  \centering
+  %gauche bas droite haut
+    \includegraphics[trim={0cm 0cm 0cm 0cm},clip,scale=0.5]{figs/results/POD/convergence/RMSE-PODbasis.png}
+    \caption{Maxmim RMSE between POD basis and reference POD basis using 10 bootstraps.}
+    \label{fig:POD:convergence:spatialRMSE}
+\end{figure}
+
+The first two spatial modes clearly converge towards the reference modes. The third mode has more trouble converging, and modes of higher rank seem to diverge. In fact, the spatial patterns of high ranks seem to be very sensitive to the chosen data set. This can for example be explained by the possible ranking modifications of the eigen modes of high order, as deduced from the eigen rates convergence study. 

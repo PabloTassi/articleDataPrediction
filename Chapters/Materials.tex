@@ -1,0 +1,111 @@
+\documentclass[main-singleColumn.tex]{subfiles}
+\begin{document}
+%----------------------------------------------------------------------------------
+%---------------------------------- INTRO -----------------------------------------
+%----------------------------------------------------------------------------------
+\section{Theoretical framework}
+\label{section:theory}
+\subsection{Proper Orthogonal Decomposition}
+\label{subsection:POD}
+The goal of POD is to extract the spatial patterns of a continuous time and space function. These patterns, when added and multiplied by adequate temporal coefficients, explain the dynamics of the studied variable. \\
+
+Let $u:\Omega\times \mathbb{T} \rightarrow \mathbb{D} = Im(u)$ be a continuous function of two variables $x,t \in \Omega\times T$. We consider that $\mathbb{D}$ is a Hilbert space with its scalar product $(.,.)_{\mathbb{D}}$ and induced norm $||.||_{\mathbb{D}}$. The POD consists of writing an approximation of $u(x,t)$ as in Eq.\ref{eq:POD:approx}at a given order $d\in \mathbb{N}$ (Lumley \cite{Lumley1967}).
+
+\begin{equation}
+\label{eq:POD:approx}
+u(x,t) \approx \sum_{k=1}^{d} v_k(t) \phi_k(x) \qquad ,
+\end{equation}
+where $\{v_k(t)\}_{k=1}^{d}$ and $\{\phi_k(x)\}_{k=1}^{d}$ are families of continuous functions defined resp. over $\Omega$ and $\mathbb{T}$, with an orthogonality constraint for the last one. The objective is to identify $\{\phi_k(x)\}_{k=1}^{d}$ that minimizes the distance of the approximation to the real value, over the whole $\mathbb{T}$ domain. In a least-squares sense, we would like to satisfy the constraint defined in Eq. \ref{eq:POD:minimization} for all $d\in \mathbb{N}$, where $\left< . \right>_{\mathbb{T}}$ is an average defined on $\mathbb{T}$ under an orthogonality constraint for $\{\Psi_k(x)\}_{k=1}^{d}$ families.
+
+\begin{equation}
+\label{eq:POD:minimization}
+\left< || u(x,t) - \sum_{i=1}^{d} v_i(t) \phi_i(x) ||_{\mathbb{D}}^{2} \right>_{\mathbb{T}} = \min_{w_i,\Psi_i} \left< || u(x,t) - \sum_{i=1}^{d} w_i(t) \Psi_i(x) ||_{\mathbb{D}}^{2} \right>_{\mathbb{T}},
+\end{equation}
+
+As this constraint is defined for all orders, it also means that the members $\phi_k$ are ordered according to their importance. In particular, for order 1, $\phi_1$ is the linear generator of a sub-vector space that is the most representative of $u(x,t)$ in $\mathbb{D}$. The family $\{\phi_k(x)\}_{k=1}^{d}$ is called the POD basis of $\mathbb{D}$ of rank $d$. \\
+
+The objective is to determine this basis, which has already been established in literature. For $u:\Omega\times T \rightarrow \mathbb{D}$, let’s define a new operator $\mathcal{R} :\mathbb{D} \rightarrow \mathbb{D}$ as $\mathcal{R}\phi = \left< (u,\phi) \times u \right>_{\mathbb{T}}$ called the POD operator. \cite{Muller2008} discusses the theoretical aspects of POD and demonstrates numerous properties, namely that the orthonormal set of eigenvectors of $\mathcal{R}$ corresponding to the first $d$ eigenvalues $\{\lambda_k\}_{k=1}^{d}$ ordered in decreasing order denotes a POD basis of $\mathbb{D}$ of order $d$. \\
+
+For this expansion, a corresponding accuracy rate, also called the explained variance rate, can be calculated as $\frac{ \sum_{k \leq d} \lambda_k}{ \sum_{k=1}^{+\infty} \lambda_k}$, which tends to 1 (perfect approximation) when $d \rightarrow +\infty$. \\
+
+In practice, we would have 2D space coordinates $x \in \Omega=\mathbb{R}^2$, time coordinates $t \in \mathbb{T}=\mathbb{R}^+$ and for example a real physical quantity $u(x,t) \in \mathbb{R}$. In our case, the function can be the bottom elevation $Z(x,t)$ evaluated in a certain point of the intake and on a given date (see Subsection \ref{subsection:data}). If a collection of data is available, then it is possible to arrange the measured values in a matrix, so as to work in a discrete space. For example, let’s consider a number of $N$ measurements at times $t_1, ..., t_N$ taken at $M$ geographical points of coordinates $x_1, ..., x_M$. We define the snapshot matrix as a capture of the quantity of interest at all times and points $U = \{u(x_i,t_j)\}_{i,j} \in \mathbb{R}^{M \times N}$. We wan’t to find a discrete POD basis that satisfies (1), written as:
+\begin{equation}
+U = \left[ {\begin{array}{ccc}
+   \phi_1(x_1) & \hdots & \phi_d(x_1) \\
+   \vdots & & \vdots \\
+   \phi_1(x_M) & \hdots & \phi_d(x_M)\\
+  \end{array} } \right] 
+\left[ {\begin{array}{ccc}
+   a_1(t_1) & \hdots & a_1(t_N) \\
+   \vdots & & \vdots \\
+   a_d(t_1) & \hdots & a_d(t_N)\\
+  \end{array} } \right] = \Phi A. 
+\end{equation}
+If the the average over $\mathbb{T}$ is defined as the statistical mean over $\mathbb{R}^N$, and the scalar product as the canonical product over $\mathbb{R}^M$, then the POD operator can be written as in Eq. \ref{eq:POD:R}
+\begin{equation}
+\label{eq:POD:R}
+\mathcal{R} \phi = \frac{1}{N} \sum_{j=1}^{N} U(:,t_j)^{T} \phi U(:,t_j) = \frac{1}{N} UU^{T}\phi,
+\end{equation}
+where $U(:,t_j)$ is the column number $j$ of the matrix $U$, i.e the field measurement at time $t_j$. Finding the POD basis of the discrete representation of the bottom elevation over its measurement space is equivalent to solving the eigen problem of $R=\frac{1}{N} UU^{T}$. The expansion in Eq. \ref{eq:POD:approx} can also be written as in \ref{eq:POD:KLT}, where $\{\phi_k(x)\}_{k=1}^{d}$ together with $\{a_k(t)\}_{k=1}^{d}$ are bi-orthonormal, and $v_k(t)=a_k(t) \sqrt{\frac{\lambda_k}{N}}$. This can therefore be seen as the Karhunen-Loève Transform (KLT) if the function $u$ is considered as a stochastic process over time. 
+
+\begin{equation}
+\label{eq:POD:KLT}
+u(x,t) \approx \sum_{k=1}^{d} a_k(t) \sqrt{\frac{\lambda_k}{N}} \phi_k(x) \qquad ,
+\end{equation}
+
+It can be better to solve the eigen problem of $R^T$ instead of the eigen problem of $R$ when $N << M$ (\cite{Sirovich1987}). When an order $d<<min(M,N)$ corresponds to a high accuracy rate, we speak of dimensionality reduction, because the data are projected in a sub-space that is of much smaller dimension than $\mathbb{R}^{M \times N}$.
+
+\subsection{Polynomial Chaos Expansion}
+\label{subsection:PCE}
+The idea behind Polynomial Chaos Expansion (PCE) is to formulate an explicit model that links a variable of interest (output) to conditioning parameters (inputs) living both in a probability space. This allows to map the propagation path of probabilistic information (uncertainties, occurences frequencies) from the inputs space to the output's space. The interest variable called $Y$ and the input parameters $\mathbf{X} = (X_1, X_2, ..., X_V)$ are therefore considered random variables, characterized by a given Probability Density Function (PDF). Let us recall some fundamentals of the mathematical probabilistic framework for a one dimensional real valued variable. The definitions can be easily extended to $\mathbb{R}^{M}$. \\
+
+Let $(\Omega,F,\mathbb{P})$ be a probability space, where $\Omega$ is the event space (space of all the possible events $\omega$) equipped with $\sigma$-algebra $F$ (some events of $\Omega$) and its probability measure $\mathbb{P}$ (likelihood of an event occurrence). A random variable defines an application $Y(\omega): \Omega \rightarrow D_Y \subseteq \mathbb{R}$, with realizations denoted by $y \in D_Y$. The PDF of $Y$ is the function $f_Y: D_Y \rightarrow \mathbb{R}$ that verifies $\mathbb{P}(Y \in E \subseteq D_Y) = \int_E f_Y(y) dy$. \\
+
+We also define the expectation of $Y$ as $E[Y] = \int_{D_Y} yf_Y(y)dy = \int_{\Omega}Y(\omega)d\mathbb{P}(\omega)$, provided that $\int_{D_Y} |y|f_Y(y)dy < + \infty $; we then say that $Y$ has a finite expectation. We also define the k’th moment as $E[Y^k] = \int_{D_Y} y^kf_Y(y)dy$. The first and second order moments are resp. called the mean and the variance. \\
+
+Back to the PCE construction, we consider that the variables $(X_1, X_2, ..., X_V)$ live in the space of real random variables with finite second order moments. This space is denoted $\mathcal{L}^2_{\mathbb{R}}(\Omega,F,\mathbb{P};\mathbb{R})$ and is a Hilbert that defines the inner product $(X_1,X_2)_{\mathcal{L}^2_{\mathbb{R}}} \equiv E[X_1,X_2] \equiv \int_{\Omega}X_1(\omega)X_2(\omega)d\mathbb{P}(\omega)$ and its induced norm $||X_1||_{\mathbb{R}} \equiv \sqrt{E[X_1^2]}$. The PCE objective is to obtain an analytical  formulae as in Eq. \ref{eq:PCE:metamodel}
+
+\begin{equation}
+\label{eq:PCE:metamodel}
+Y = M(\mathbf{X}) = M_0 + \sum_{i=1}^{V} M_i(X_i) + \sum_{1 \leq i < j \leq V} M_{i,j}(X_i,X_j) + ... + M_{1,...,V}(X_1, X_2, ..., X_V),
+\end{equation}
+where $M_0$ is the mean of $Y$ and $M_{I \subseteq \{1,...,V\}}$ represents the common contribution of the variables $I \subseteq \{1,...,V\}$ on the variation of $Y$. \\
+
+For the PCE model, these contributions have a polynomial form. We shall define, for earch parameter $X_i$, an orthonormal univariate polynomial basis $\left\{ \xi_{ \alpha_i }^{i}, \alpha_i \in \{0, ..., P\} \right\}$ where $P \in \mathbb{N}$ is a chosen polynomial degree. The orthonormality is defined with respect to the inner product $(X_1,X_2)_{\mathcal{L}^2_{\mathbb{R}}}$. If we introduce the multi-index notation $\underline{\alpha} = \{\alpha_1, ..., \alpha_V\}$ so that $|\underline{\alpha}| =\sum_{i=1}^{V}\alpha_i $, we can define a multivariate basis $\left\{\zeta_{\underline{\alpha}},|\underline{\alpha}|\in \mathbb{N}, |\underline{\alpha}| \in \{0, ..., P\}\right\}$ as $\zeta_{\underline{\alpha}}(X_1, X_2, ..., X_V) = \prod_{i=1}^{V}\xi_{\alpha_i}^{i}(X_i)$. Therefore, the model in Eq. \ref{eq:PCE:metamodel} can be written as:
+\begin{equation}
+  \label{eq:PCE:polynomial}
+Y = M(\mathbf{X}) = \sum_{|\underline{\alpha}| \leq P} c_{\underline{\alpha}} \zeta_{\underline{\alpha}}(X_1, X_2, ..., X_V),
+\end{equation}
+
+where $c_{\underline{\alpha}} $ are deterministic coefficients that can be estimated thanks to different methods. Due to our small data set, we used the Least Angle Regression Stagewise method (LARS) in order to construct an adaptive sparse PCE. The reader can refer to the work of \cite{Blatman2009} for further details on PCE in general and LARS in particular.  \\
+
+The choice of the basis is crucial and is directly related to the choice of the marginals of the input variables, via the inner product  $(.,.)_{\mathcal{L}^2_{\mathbb{R}}}$. Chaos polynomials were first introduced by \cite{Wiener1938} for input variables characterized by Gaussian distributions. The orthonormal basis with respect to this marginal is the Hermite polynomials family. Later, \cite{XiuKarniadakis2003} associated Askey scheme hypergeometric polynomial families to some well-known parametric distributions. For example, the Legendre family is orthonormal with respect to the Uniform marginals. This is called $gPC$ (generalized Polynomial Chaos) when variables of different PDFs are used as inputs. \\
+
+In practice however, the input distibutions of physical variables can be different from usual parametric marginals. In such cases, the marginals can be infered by empirical methods like the Kernel Smoother (see \cite{Hastie2001} for theoretical elements). In this case, an orthonormal polynomial basis with respect to arbitrary marginals can be build with a Gram-Schmidt orthonormalization process as in \cite{Witteveen2006} or via the Stieltjet three-term recurrence procedure as in \cite{WanKarniadakis2005}. 
+
+
+\subsection{Sensitivity analysis with a polynomial model}
+\label{subsection:sensitivity}
+The main goal of a sensitivity analysis is to rank a set of input parameters $(X_1, X_2, ..., X_V)$ according to their influence on an output variable $Y=M(\mathbf{X})$. \\
+
+Different types of indicators, chosen according to the type of inputs, can be calculated for the ranking. For example, the variance of $Y=M(\mathbf{X})$ can be decomposed using the total variance theorem, which helps extract the parts of variance that are induced by each input variable. When the variables $(X_1, X_2, ..., X_V)$ are \textbf{independent}, this gives the ANOVA (Analysis Of VAriance) decomposition, and influence indicators called Sobol indices can be calculated as a variance ratio (\cite{Iooss2011}). For the dependant variables case, other solutions can be considered, as the ANCOVA (Analysis Of COVAriance) decomposition and associated indices (\cite{Caniou2012}), but the latter can be complicated to interpret due the presence of covariances terms, implied by dependencies, that could be negative. \\
+
+Here, we propose a simple variable influence calculation that fully exploits the PCE explicit form. In fact, for $Y=M(\mathbb{X})$ that is formulated as in Eq. \ref{eq:PCE:metamodel} and approximated by PCE, the advantage of a polynomial model is that each variable's contributions, including its interactions with other variables, are written explicitly and take the form of univariate polynomials for single contributions, and product of univariate polynomials for interactive contributions. \\
+
+Therefore, when the model is written as in Eq. \ref{eq:PCE:polynomial}, a simple computation of the weights of the multivariate polynomials $\zeta_{\underline{\alpha}}(X_1, X_2, ..., X_V) = \prod_{i=1}^{V}\xi_{\alpha_i}^{i}(X_i)$ can be written as:
+\begin{equation}
+  \label{eq:sensitivity:weights}
+  w_{\zeta_{\underline{\alpha}}} = \dfrac{|c_{\underline{\alpha}}|}{ \sum_{|\underline{\beta}| \leq P} |c_{\underline{\beta}}|}
+\end{equation}
+
+and provides with a quantification of the various contributions of each input variable on the output. The input variables must be centered and reduced for the weights $w_{\zeta_{\underline{\alpha}}}$ to be representative of the contribution importance. 
+
+
+
+%\subsection{Accuracy analysis in statistics}
+%\subsubsection{Convergence and Bootstraping}
+%\subsubsection{The Leave One Out (LOO)}
+%\subsubsection{Model Selection criterias}
+%---------------------------------------------------------------------------
+
+\end{document}

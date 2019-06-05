@@ -1,0 +1,618 @@
+\documentclass[main-singleColumn.tex]{subfiles}
+\begin{document}
+%----------------------------------------------------------------------------------
+%---------------------------------- INTRO -----------------------------------------
+%----------------------------------------------------------------------------------
+\newpage
+\section{Application}
+\label{section:results}
+\subsection{Data Analysis using POD}
+\label{subsection:POD}
+In this section, the POD is applied as a single process (without PCE coupling) on the bathymetry measurements. The interest is to deduce the morphodynamical pattern in order to better understand the sediments movement and to characterize its variations in time. 
+
+\subsubsection{Filtering and Analysis}
+\label{subsubsection:POD:filtering}
+\noindent At first, all the data are considered as valuable information. The measurements are stored in the snapshot matrix $Z = \{z(x_i,t_j)\}_{i,j} \in \mathbb{R}^{M \times N}$ and POD-processed. The first two POD temporal coefficients are shown in the Figure \ref{fig:POD:noFilter:temporal}.
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+    \includegraphics[trim={0cm 0.5cm 0cm 0.4cm},clip,scale=0.5]{figs/results/POD/filtering/noFilter/POD_coeffs_1_2.png}
+    \caption{The first two temporal coefficients of the POD applied to the complete data set}
+    \label{fig:POD:noFilter:temporal}
+\end{figure}
+
+The first two signals show regularity, except for some extreme points. A data investigation shows that the latter correspond to dates where the measurements were incomplete. For example, by significant storm events, sea swell prevents the measuring boat from staying still, making the entrance of the channel impossible to measure. A second POD is therefore performed on a filtered data set composed of 156 bathymetries, where the incomplete data are deleted from the snapshot matrix. The resulting first four temporal coefficients are shown in the Figure \ref{fig:POD:filter:temporal}.
+
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+    \includegraphics[trim={0cm 1.77cm 0cm 0.5cm},clip,scale=0.5]{figs/results/POD/filtering/filter/POD_coeffs_1_2.png} \\
+    \vspace{0.2cm}\hspace{0.25cm} \includegraphics[trim={0cm 0cm 0cm 0.5cm},clip,scale=0.48]{figs/results/POD/filtering/filter/POD_coeffs_3_4.png} 
+    \caption{The first four temporal coefficients of the POD applied to the filtered data set}
+    \label{fig:POD:filter:temporal}
+\end{figure}
+
+The first two temporal coefficients show some regularity in time, unlike the third and fourth ones. The POD basis obtained with the full and the filtered data set are compared as well in the Figure \ref{fig:POD:noFilter:spatial}. The first two patterns remain almost identical, wheras the third and fourth dramatically change (the statistical convergence is discussed in Subsection \ref{subsubsection:POD:convergence}). Even though the spatial patterns are mathematical modes and have no intrisic physical significance, an interpretation could be given, at least for the first two elements that show stability. The first pattern (Figure \ref{fig:POD:noFilter:spatial}-e) has a quadratic shape through the channel. When its temporal coefficient (Figure \ref{fig:POD:filter:temporal}) increases, the global silting in the channel goes up. For example, the variation of this temporal coefficient could be correlated to external inputs as waves and tides. The decrease is always explained by dredging. The apparent periodicity is not natural/seasonal but forced.
+
+\begin{figure}[pos=H]
+  \centering
+  \vspace{-0.5cm}  %gauche bas droite haut
+    \subfloat[][Full set $\Phi_1(x)$]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.25]{figs/results/POD/filtering/noFilter/PODMode_1.png}} 
+    \subfloat[][Full set $\Phi_2(x)$]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.25]{figs/results/POD/filtering/noFilter/PODMode_2.png}}
+    \subfloat[][Full set $\Phi_3(x)$]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.25]{figs/results/POD/filtering/noFilter/PODMode_3.png}} 
+    \subfloat[][Full set $\Phi_4(x)$]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.25]{figs/results/POD/filtering/noFilter/PODMode_4.png}} \\
+    \subfloat[][Filtered set $\Phi_1(x)$]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.25]{figs/results/POD/filtering/filter/PODMode_1.png}} 
+    \subfloat[][Filtered set $\Phi_2(x)$]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.25]{figs/results/POD/filtering/filter/PODMode_2.png}}
+    \subfloat[][Filtered set $\Phi_3(x)$]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.25]{figs/results/POD/filtering/filter/PODMode_3.png}}
+    \subfloat[][Filtered set $\Phi_4(x)$]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.25]{figs/results/POD/filtering/filter/PODMode_4.png}}
+    \caption{First four spatial patterns before and after filtering. Values are positive when red, negative when blue and near-zero when white.}
+    \label{fig:POD:noFilter:spatial}
+\end{figure}
+
+ The second pattern (Figure \ref{fig:POD:noFilter:spatial}-f) acts as a geometric distributer of the silting. In general, when the first temporal coefficient is maximal, the second coefficient is positive, meaning that the silting mainly occurs in the middle of the first portion of the channel (upstream),  in the right bank of the bend and in the left bank in front of the pumps. This spatial distribution can for example be associated to the intern flow, implying a velocity distribution inside the channel. In fact, the sediments tend to settle where the velocities are lower, which is probably the case where the banks appear. A parallel can be drawn with the sediments dynamics in meandering rivers. \\
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+    \includegraphics[trim={0cm 0cm 0cm 0.5cm},clip,scale=0.5]{figs/results/POD/filtering/filter/POD_RIC.png} \\
+    \caption{Explained variance rate and RMSE as functions of the approximation rank}
+    \label{fig:POD:filter:RIC}
+\end{figure}
+The explained variance rates associated to these patterns, as well as patterns of higher order, are plotted in the Figure \ref{fig:POD:filter:RIC}.The first pattern represents 92\% of the bathymetry variance, it explains most of the dynamics. The variance percentage reaches 99\% at rank 20, where the time-averaged relative Root-Mean-Squared-Error (RMSE) between the approximation $\sum_{i=1}^d a_k(t) \phi_k(x)$ and reality $z(x,t)$ is slightly over 10\%. The latter decreases to 7.5\% for the rank 40. It is shown here that dimensionality reduction is a realistic option for this specific dynamical problem. \\
+
+
+Back to the Figure \ref{fig:POD:noFilter:spatial}, not only the third and the fourth mode can easily transform by changing the data set, but they are also difficult to interpret in terms of physics. A further investigation of the data shows that this behavior is also associated to missing data. In fact, the measured profiles before $2016$ were not always complete. Starting from $2016$, the quality of bathymetric measurements has increased, as shown in the Figure \ref{fig:POD:quality:measurements}-b, where bathymetric measurements are plotted without space filling or interpolation. As a result, a calculation of the variances map over the 2007-2015 period shows non physical variances that are linked to the interpolation bias.In fact, the interpolation process fills the gap by extrapolating the values from the middle of the profile to the banks, ending with too low elevations at the banks. The alternating complete and incomplete profile measurements,coupled to the interpolation bias, create a artificial dynamics at the banks that look like silting. These fake dynamics end up in the third and fourth POD modes for example in the Figures \ref{fig:POD:noFilter:spatial}-g and \ref{fig:POD:noFilter:spatial}-h, because they happen to be the statistical representation of this incomplete profiles occurences.
+
+\begin{figure}[pos=H]
+  \centering
+  \vspace{-0.5cm}  %gauche bas droite haut
+    \subfloat[][Old measurement]{\includegraphics[trim={3cm 2.5cm 3cm 2.5cm},clip,scale=0.2]{figs/results/POD/quality/2007-10-31.png}} 
+    \subfloat[][Recent measurement]{\includegraphics[trim={3cm 2.5cm 3cm 2.5cm},clip,scale=0.2]{figs/results/POD/quality/2018-09-24.png}}
+    \subfloat[][2007-2015 Variance]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.25]{figs/results/POD/quality/2007-2015_Bathymetries_Variance.png}}
+    \subfloat[][2016-2018 Variance]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.25]{figs/results/POD/quality/2016-2018_Bathymetries_Variance.png}}
+    \caption{An old and a recent bathymetric measurement inside the intake. Values are positive when red, negative when blue and near-zero when white. Also represented are the variance maps over defined periods, where red is for relatively significant variance values.}
+    \label{fig:POD:quality:measurements}
+\end{figure}
+
+Bad quality measurements enhanced by the interpolation bias therefore perturb the POD basis and make it difficult to exploit. This time, two alternatives can be considered:
+\begin{itemize}
+\item Using quality data by considering the $2016-2018$ period only. However, restraining the set to a limited size may alter the convergence of the extracted modes and therefore the representation of the full time measurements on this basis, as past events are ignored.
+\item Using the complete filtered $2007-2018$ set but restrained to a limited area where bathymetry is always measured, corresponding to the high depths zones colored in blue in the Figures \ref{fig:POD:quality:measurements}-a and \ref{fig:POD:quality:measurements}-b, where the sediments are most likely to settle, which also is the area of considerable variances in the Figure \ref{fig:POD:quality:measurements}-c.
+\end{itemize}
+
+An attempt is given to both solutions, and the resulting first four POD basis elements are shown in the Figure \ref{fig:POD:TR-SR:spatial}.
+
+\begin{figure}[pos=H]
+  \centering
+  \vspace{-0.5cm}  %gauche bas droite haut
+    \subfloat[][T-R set $\Phi_1(x)$]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.25]{figs/results/POD/quality/PODMode_1.png}} 
+    \subfloat[][T-R set $\Phi_2(x)$]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.25]{figs/results/POD/quality/PODMode_2.png}}
+    \subfloat[][T-R set $\Phi_3(x)$]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.25]{figs/results/POD/quality/PODMode_3.png}}
+    \subfloat[][T-R set $\Phi_4(x)$]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.25]{figs/results/POD/quality/PODMode_4.png}} \\
+    \subfloat[][S-R set $\Phi_1(x)$]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.25]{figs/results/POD/restrained/PODMode_1.png}} 
+    \subfloat[][S-R set $\Phi_2(x)$]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.25]{figs/results/POD/restrained/PODMode_2.png}}
+    \subfloat[][S-R set $\Phi_3(x)$]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.25]{figs/results/POD/restrained/PODMode_3.png}}
+    \subfloat[][S-R set $\Phi_4(x)$]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.25]{figs/results/POD/restrained/PODMode_4.png}}
+    \caption{First four spatial patterns of the POD applied to the Time-Restrained $2016-2018$ set (T-R) and to the Space-Restrained set (S-R). Values are positive when red, negative when blue and near-zero when white.}
+    \label{fig:POD:TR-SR:spatial}
+\end{figure}
+
+
+In comparison with the decomposition of the full matrix showed in the Figure \ref{fig:POD:noFilter:spatial}, the first two elements of the basis are almost identical, be it for the time-restrained or the space-restrained set. Conversely, the third and fourth elements dramatically change. However, they look almost identical for the space-restrained and the time-restrained POD, even though slight differences can be observed on the fourth mode, namely downstream of the channel. \\
+
+The associated temporal coefficients are plotted as well in the Figure \ref{fig:POD:TR-SR:temporal}. 
+
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+    \includegraphics[trim={0cm 1.79cm 0cm 0.5cm},clip,scale=0.4]{figs/results/POD/quality/POD_coeffs_1_2.png}
+    \includegraphics[trim={0cm 1.79cm 0cm 0.5cm},clip,scale=0.4]{figs/results/POD/restrained/POD_coeffs_1_2.png} \\
+    \vspace{0.2cm}\hspace{0.25cm} \subfloat[][T-R set]{\includegraphics[trim={0cm 0cm 0cm 0.5cm},clip,scale=0.4]{figs/results/POD/quality/POD_coeffs_3_4.png}}
+    \subfloat[][S-R set]{\includegraphics[trim={0cm 0cm 0cm 0.5cm},clip,scale=0.4]{figs/results/POD/restrained/POD_coeffs_3_4.png}}
+      
+    \caption{The first four temporal coefficients of the POD applied to the Time-Restrained $2016-2018$ set (T-R) and to the Space-Restrained set (S-R). For the T-R set, the complete lines correspond to the 2016-2018 POD analysis, the dashed lines represent the temporal coefficients extracted from projecting the 2007-2015 measurements on the 2016-2018 POD basis by scalar product $a_k(t) = \left< Z(:,t),\Phi_k(x) \right>$}
+    \label{fig:POD:TR-SR:temporal}
+\end{figure}
+
+The variations of the first two coefficients are identical to the coefficients of the POD applied to the full set (see Figure \ref{fig:POD:filter:temporal}). The third and the fourth coefficients show less stochastic behavior than those obtained with the full set, even though some peaks are still observed, and may probably be linked to extreme events. The third coefficient variations are almost identical for the space-restrained and the time-restrained POD. Differences are noticed on the fourth signal, but are not surprising as the spatial pattern also slightely varied. \\
+
+The accuracy of data reduction using POD with different sets is assessed in the Figure \ref{fig:POD:comparison}, by calculating the time-averaged RMSE compared to the real data in the common area (restrained zone) for the full 2007-2018 data set, by projecting the measurements on the POD basis using the scalar product $a_k(t) = \left< Z(:,t),\Phi_k(x) \right>$, as shown in the Figure \ref{fig:POD:TR-SR:temporal}-a for example. This gives an idea about the most accurate basis for the approximation of the bathymetry in the high depths zone, namely for the prediction process.  
+
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+    \includegraphics[trim={0cm 0cm 0cm 0.5cm},clip,scale=0.6]{figs/results/POD/POD_RMSE-compare-2007-2018.png}
+    \caption{The 2007-2018 time averaged RMSE between the space-restrained measurements and the reduction using three POD reductions }
+    \label{fig:POD:comparison}
+\end{figure}
+
+Using three modes only, the time-averaged RMSE is about 17 to 19\% for the three methods.The performance of the space-restrained POD is identical to the full POD if only the first two modes are used. Beginning from the third mode, a difference arises. Using 20 modes, the RMSE goes down to about 8\% for the space-restrained POD, 9\% for the full POD and 15\% for the time-restrained POD.  Overall, there is a clear ranking, showing that the space restrained POD is the most accurate to represent the data in the high depths zone, nearly followed by the full POD. \\
+
+The explained variance rates of the POD performed on the full and the space-restrained data-sets are compared in the Figure \ref{fig:POD:restrained:RIC}. About 99\% of the variance is captured with 12 modes only for the space restrained POD, whereas the same rate requires 20 modes for the full POD. This is be due to the noisy and missing data on the banks of the channel.
+
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+    \includegraphics[trim={0cm 0cm 0cm 0.5cm},clip,scale=0.6]{figs/results/POD/restrained/POD_RIC-compare.png}
+    \caption{Explained variance rates of the full and the space-restrained POD.}
+    \label{fig:POD:restrained:RIC}
+\end{figure}
+
+For the prediction phase beginning from section \ref{subsection:learning}, only the space-restrained POD is selected. 
+
+%\subsubsection{The POD as a missing data corrector}
+%Here, the real bathymetries and those obtained with a reconstruction are compared \ref{fig:POD:quality:temporal}
+
+\subsubsection{Convergence analysis}
+    \label{subsubsection:POD:convergence}
+A bootstrap convergence analysis is performed on the explained variance percentages using a Bootstrap of size 10. The results are shown in the Figure \ref{fig:POD:convergence:eV}. The convergence and the tightening of the confidence intervals when increasing the matrix size are clear for this first four modes. However, whereas the confidence interval represents at most an error of $\pm 0.6 \%$ around the mean for the first mode, it goes up to $\pm 10\%$ for the fourth. 
+
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+    \includegraphics[trim={0cm 1.6cm 0cm 0.5cm},clip,scale=0.6]{figs/results/POD/convergence/percent_1_2_convergence.png} \\
+    \hspace{0.2cm} \includegraphics[trim={0cm 0cm 0cm 0.5cm},clip,scale=0.6]{figs/results/POD/convergence/percent_3_4_convergence.png} 
+    \caption{Bootstrap convergence of the first four explained variance rates of the POD applied to the filtered data set}
+    \label{fig:POD:convergence:eV}
+\end{figure}
+
+%\subsubsection{The impact of centering}
+%Don't forget to plot the retrieved mean. Could be a signal to predict. 
+
+\subsection{Measurement-based data learning using PCE}
+\label{subsection:PCE}
+As explained in subsection \ref{subsubsection:POD:filtering}, only the space-restrained POD is used in the learning phase. In this section, the aim is to learn the way the associated temporal coefficients shown in the Figure \ref{fig:POD:TR-SR:temporal} evolve in time, as a function of the forcing parameters. Here, PCE is used as a learning strategy for a dynamical model, as introduced in section \ref{subsection:PCE}. \\
+
+\subsubsection{The learning}
+\label{subsection:learning}
+As shown in section \ref{subsection:data}, the measurements of bathymetry and forcings overlap only on the 2012-2017 period, this leaves us with 64 silting periods to study. As a matter of fact, the data-set is small for the dimension of the problem, if all the forcing variables are considered. For example with 20 inputs, the number of polynomial terms to be calibrated grows from 20 for degree one to 230 for degree 2. This is the so-called curse of dimensionality and motivates the use of LARS, as introduced in section \ref{subsection:PCE}. \\ 
+
+Furthermore, good practice suggests that the learning set must be separated into different sub-sets for different steps of the learning algorithm. Classicaly, a training set is used for the learning, a test set is used for the calibration of the learning if any hyperparameters are to be chosen (polynomial degree here), and a prediction set is used to assess the established statistical model. As our data set is particularly small, a training set is used to calibrate the coefficients of the polynomial using LARS, but the test set and prediction set are considered as one and are used for both the evaluation of polynomial degree choice and for testing the accuracy of the fitting on the result. The chosen optimal degree of the polynomial corresponds to the minimal relative empirical error (defined in Eq. \ref{eq:relativeEmpiricalError}) on the prediction phase, to avoid oscillations and therefore overfitting in the training phase.  \\
+
+A first learning attempt is done with a training set of size $50$ and a test set of size $14$. The data are chosen in their historical order, to mimic the learning process that may be established by a physicist in concrete and applied cases. In order to check the influence of variable selection on the learning , three different models are built with different sets of input variables, similarily to Eq. \ref{eq:prediction:minimodel}:\begin{itemize}
+\item The basic model of dimension $17$, as described in \ref{eq:prediction:minimodel} : $a_i(t_2) \approx H_i (a_k(t_1),t_2-t_1,\theta_1,...,\theta_V)$ where $V=15$ since all the variables defined in Table \ref{table:data:statistics} are used;
+\item A model of dimension $31$, taking account of dependencies and interactions between the modes, defined as $a_i(t_2) \approx H_i^F (a_1(t_1),...,a_{15}(t_1),t_2-t_1,\theta_1,...,\theta_V)$;
+\item A model of dimension $8$, taking account of the physicits a priori about the important forcings (corresponding to the variables in bold letters from Table \ref{table:data:statistics}), and defined as $a_i(t_2) \approx H_i^P (a_k(t_1),t_2-t_1,\theta_1,...,\theta_{V_P})$ where $V_P=6$. \\
+  \end{itemize}
+
+For these variables, three different approaches are used for the choice of marginals, in order to assess the influence of the latter on the learning process for a pointwise prediction. The associated orthonormal polynomial basis with respect to the scalar product $<.,.>_{\mathcal{L}^2_\mathbb{R}}$ can be chosen consequently. The choices are designated by the following acronyms and explained below:
+\begin{itemize}
+\item \textbf{Lgd:} All the variables are considered to follow a Uniform PDF. The bounds of the marginal are set to the minimum and maximum historical values $\pm 1\%$. The associated orthonormal polynomial basis is the Legendre family;
+\item \textbf{Hrm:} All the variables have Gaussian marginals characterized by the empirical mean and variance deduced from the data. The associated orthonormal polynomial basis is the Hermite family;
+\item \textbf{Stlj:} The marginals are infered from the variables using Gaussian Kernel density estimates. The orthonormal polynomial basis is directly constructed from the knowledge of the marginal using a Stieltjes orthogonalisation.  \\
+\end{itemize}
+
+The three above-cited marginal choices and associated polynomial basis  (Lgd, Hrm, Stlj) are trained for models with different dimensions ($H_i^P$, $H_i$, $H_i^F$). Polynomial degrees from 1 to 7 are tested, and the associated empirical errors $\epsilon_T$, and $\epsilon_P$ are calculated respectively on the Training and Prediction set as defined in Eq. \ref{eq:relativeEmpiricalError}. The polynomial degree corresponding to the fitting that minimizes the prediction empirical error $\epsilon_P$ is chosen and the associated learning called \og optimal \fg{}. The empicial errors of the latter are compared in the Figure  \ref{fig:PCE:errorsComparison}.
+
+
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+  \includegraphics[trim={0cm 1.5cm 0cm 0cm},clip,scale=0.7]{figs/results/PCE/restrained/optimalTrainingErrors_compareALL.png} \\
+ \includegraphics[trim={0cm 0cm 0cm 0cm},clip,scale=0.7]{figs/results/PCE/restrained/optimalPredictionErrors_compareALL.png}
+    \caption{The empirical training and prediction errors corresponding to the optimal fitting of models with different dimensions}
+    \label{fig:PCE:errorsComparison}
+\end{figure}
+
+Globally, the training errors are comparable, but could be minimized for particular modes (number 3 for eg.), either by using the association of Kernel smoothing and Stieltjes orthogonalisation on the smallest dimension 8, or by using gaussian marginals with the highest dimension 31. This indicates that using marginals and polynomials directly deduced from the data allows to better learn from the set of 8 inputs than using parametric distributions that are not garanteed to fit the data. For the prediction phase, the prediction errors are comparable for all models for modes 1 and 2. Starting from mode 3, differences start to emerge. The learning on the biggest inputs set of dimension 31 that optimized the training earlier, exhibits here the worst prediction error. There seems to be an overfitting of the model by selecting a bigger amount of basis elements. The second worst error is associated to the Uniform distributions with the Legendre polynomial family, the latter is indeed too generic and doesn't account for particularities of the inputs. The Kernel smoothing and Stieltjes orthogonalisation on the smallest dimension 8 performs better here. \\
+
+The explained variance rates of the first two modes are much larger than the other modes. It may therefore be tempting to conclude that since the first two modes are well and equally approximated with all the configurations, the choice of the dimension and basis is unnecessary and any configuration would fit. However, the accurate prediction of modes of higher rank is what makes the difference between an average forecasting and a forecasting that captures less frequent events and more detailed features of the 2D field. \\
+
+The residuals associated to the different models are also shown in the Figure \ref{fig:PCE:residuals} for the training and the prediction phase. They are calculated as $a_k(t) - H_k(t)$. The training residuals show the accuracy of the fitting, and the prediction residuals show the accuracy of the forecasting.
+
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+     \includegraphics[trim={0cm 0cm 0cm 0cm},clip,scale=0.55]{figs/results/PCE/residuals/comparison/Mode1_trainingResiduals_legend.png} 
+     \includegraphics[trim={1cm 0cm 0cm 0cm},clip,scale=0.55]{figs/results/PCE/residuals/comparison/Mode2_trainingResiduals.png}
+     \includegraphics[trim={1cm 0cm 0cm 0cm},clip,scale=0.55]{figs/results/PCE/residuals/comparison/Mode3_trainingResiduals.png}  \\
+     \vspace{-0.1cm} \subfloat[][First mode $a_1(t)$]{\includegraphics[trim={0cm 0cm 0cm 0cm},clip,scale=0.55]{figs/results/PCE/residuals/comparison/Mode1_predictionResiduals.png}}
+     \subfloat[][Second mode $a_2(t)$]{\includegraphics[trim={1cm 0cm 0cm 0cm},clip,scale=0.55]{figs/results/PCE/residuals/comparison/Mode2_predictionResiduals.png}}
+     \subfloat[][Third mode $a_3(t)$]{\includegraphics[trim={1cm 0cm 0cm 0cm},clip,scale=0.55]{figs/results/PCE/residuals/comparison/Mode3_predictionResiduals.png}}
+    \caption{Comparison of the residuals distribution using Kernel Smoothing for different polynomial basis and dimensions, with a Training Size $=50$ and Prediction Size = $14$, for the first three temporal coefficients.}
+    \label{fig:PCE:residuals}
+\end{figure}
+
+For mode 1, the training residuals associated to all the tested models seem to be centered around zero, the models are unbiased. The residuals however are shifted to the left in the prediction phase, which means that $a_1(t)$ is more often overestimated, implying that the mean elevation in the channel and consequently the mean global silting may be slightely exaggeretad. However, the mean overestimation residual is maximum around $-10^{-3}$, 1 to 2 orders of magnitude lower than the values of $a_1(t)$. For mode 2, the training residuals are centered, except for the model with the highest dimension 31 using Hermite polynomials showing a slight bias that amplifies in the prediction phase. Here, the residuals are of order $10^{-2}$ and this bias can not be ignored. The $H_i^F$;Hrm model can therefore put aside. For mode 3, the model of dimension 8 using the Kernel density estimates of the maginals coupled to a Stieltjes orthonormalization, shows the best behavior in the training phase with a nice centering that is kept through the prediction phase. The other models are all underestimating $a_3(t)$ with residuals of the same order of magnitude than the output itself.  \\
+
+Through this model and marginal comparison process, it seems to us that the best choice would be fitting marginals to input data using Kernel Smoothing and constructing an orthonormal polynomial bias via the Stieltjes process. The best problem dimension here seems to be the lowest, equal to 8. However, for a more accurate variables selection, the most objective choice would be to try all combinations of available variables and all possible dimensions, but that is computationaly consuming and would be out of the scope of this paper. In the present work, the discussion is centered around the assessment of machine learning using polynomial chaos, and the possibility of finding a more optimal variable configuration is simply highlighted. \\
+
+The model $H_i^P$;Stlj of dimension 8 is therefore selected for the prediction assessment. For this model, the optimal polynomial degrees chosen for each mode are shown in the Figure \ref{fig:PCE:errors}, as well as a comparison between the associated empirical errors for the training and the prediction phase.
+
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+  \includegraphics[trim={0cm 0cm 0cm 0cm},clip,scale=0.6]{figs/results/PCE/restrained/optimalErrors_degree-apriori-Stieltjes.png}
+    \caption{Selected \og optimal \fg{} PCE degree for each mode (blue-stars curve) and associated empirical errors of the training ($\epsilon_T$) and the prediction ($\epsilon_P$) sets.}
+    \label{fig:PCE:errors}
+\end{figure}
+
+Linear models are optimal for the first two modes, and the associated errors are very low for both the training and the prediction sets. For modes 3 to 5, the optimal polynomial degree increases which implies higher contribution ranks and/or higher interaction orders for the input variables (models are shown in Section \ref{subsection:PCE:sensitivity}). The training errors are slightly larger than for the first two modes, and the prediction errors are even greater. For modes of higher ranks, the constructed models are generally linear or constant, with some ponctual exceptions. Further more, the associated errors can get much larger. Last, the prediction errors of the temporal coefficients are lower than 50\% at least for the ten first modes. Moreover, there is an increasing tendancy for both errors, as the mode rank increases (i.e. the variance rate decreases). The fitting with the chosen optimal degree is illustrated in the Figure \ref{fig:PCE:comparison} for the first four modes using the model $H_i^P$ for each mode $i$.
+
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+     \includegraphics[trim={0cm 1.3cm 0cm 0cm},clip,scale=0.6]{figs/results/PCE/restrained/modes_Stieltjes_apriori/Mode1_LARS_Nvar9_deg1.png} 
+     \includegraphics[trim={0cm 1.3cm 0cm 1cm},clip,scale=0.6]{figs/results/PCE/restrained/modes_Stieltjes_apriori/Mode2_LARS_Nvar9_deg1.png} \\
+     \includegraphics[trim={0cm 0cm 0cm 1cm},clip,scale=0.6]{figs/results/PCE/restrained/modes_Stieltjes_apriori/Mode3_LARS_Nvar9_deg2.png}
+     \includegraphics[trim={0cm 0cm 0cm 1cm},clip,scale=0.6]{figs/results/PCE/restrained/modes_Stieltjes_apriori/Mode4_LARS_Nvar9_deg3.png}
+    \caption{Fitting of the first four temporal coefficients using PCE-LARS. Background colored in grey and red resp. are the training and the prediction step. The associated empirical errors resp. $\epsilon_T$ and $\epsilon_P$ are calculated as in Eq. CITE-EQ.}
+    \label{fig:PCE:comparison}
+\end{figure}
+
+\subsubsection{Convergence and Robustness of the fitting}
+In Subsection \ref{subsection:learning}, an arbitrary number of $50$ measurements was used for the training phase, leaving us with $14$ prediction points for testing purposes. \\
+
+In this section, the training size influence on the training and prediction errors is assessed as shown in the Figure \ref{fig:PCE:convergence}. For each training size, the members are chosen randomly among the full data set, and the remaining are used for the prediction phase. This random picking is done 20 times for each training size in order to estimate a median error and a confidence interval around this value as shown in the Figure \ref{fig:PCE:convergence}. The results are shown for the selected model of dimension 8 using Kernel Smoothing and orthonormalization with Stieltjes, as well as for the model using Hermite polynomials with the same dimension for comparison purposes. 
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+     \subfloat[][$a_1(t)$ - Stieltjet training]{\includegraphics[trim={0cm 1.8cm 0cm 0cm},clip,scale=0.53]{figs/results/PCE/convergence/apriori-Stieltjes/Mode1_trainingError.png}}
+     \subfloat[][$a_2(t)$ - Stieltjet training]{\includegraphics[trim={0cm 1.8cm 0cm 0cm},clip,scale=0.53]{figs/results/PCE/convergence/apriori-Stieltjes/Mode2_trainingError.png}}
+     \subfloat[][$a_3(t)$ - Stieltjet training]{\includegraphics[trim={0cm 1.8cm 0cm 0cm},clip,scale=0.53]{figs/results/PCE/convergence/apriori-Stieltjes/Mode3_trainingError.png}} \\
+     \subfloat[][$a_1(t)$ - Hermite training]{\includegraphics[trim={0cm 1.8cm 0cm 0cm},clip,scale=0.53]{figs/results/PCE/convergence/apriori/Mode1_trainingError.png}}
+     \subfloat[][$a_2(t)$ - Hermite training]{\includegraphics[trim={0cm 1.8cm 0cm 0cm},clip,scale=0.53]{figs/results/PCE/convergence/apriori/Mode2_trainingError.png}}
+     \subfloat[][$a_3(t)$ - Hermite training]{\includegraphics[trim={0cm 1.8cm 0cm 0cm},clip,scale=0.53]{figs/results/PCE/convergence/apriori/Mode3_trainingError.png}} \\
+     \vspace{-0.1cm} \subfloat[][$a_1(t)$ - Stieltjet prediction]{\includegraphics[trim={0cm 1.8cm 0cm 0cm},clip,scale=0.53]{figs/results/PCE/convergence/apriori-Stieltjes/Mode1_predictionError.png}}
+     \subfloat[][$a_2(t)$ - Stieltjet prediction]{\includegraphics[trim={0cm 1.8cm 0cm 0cm},clip,scale=0.53]{figs/results/PCE/convergence/apriori-Stieltjes/Mode2_predictionError.png}}
+     \subfloat[][$a_3(t)$ - Stieltjet prediction]{\includegraphics[trim={0cm 1.8cm 0cm 0cm},clip,scale=0.53]{figs/results/PCE/convergence/apriori-Stieltjes/Mode3_predictionError.png}} \\
+     \vspace{-0.1cm} \subfloat[][$a_1(t)$ - Hermite prediction]{\includegraphics[trim={0cm 0cm 0cm 0cm},clip,scale=0.53]{figs/results/PCE/convergence/apriori/Mode1_predictionError.png}}
+     \subfloat[][$a_2(t)$ - Hermite prediction]{\includegraphics[trim={0cm 0cm 0cm 0cm},clip,scale=0.53]{figs/results/PCE/convergence/apriori/Mode2_predictionError.png}}
+     \subfloat[][$a_3(t)$ - Hermite prediction]{\includegraphics[trim={0cm 0cm 0cm 0cm},clip,scale=0.53]{figs/results/PCE/convergence/apriori/Mode3_predictionError.png}}
+    \caption{The training and prediction empirical errors (resp. $\epsilon_T$ and $\epsilon_P$) calculated for diverse training sizes with 20 random picks among the available data. Plotted are the median value and confidence intervals, where letter $\textbf{P}$ in the legend designates $\textbf{Percentile}$}
+    \label{fig:PCE:convergence}
+\end{figure}
+
+For the first two modes, the training errors show a convergence of the median value and a tightening of the confidence intervals P10-P90 and P20-P80 around the median are noticed early, around size 25. No considerable difference is noted between the Stieltjet and the Hermite models.  The associated median prediction errors decrease with the increase of the training size for both modes and both polynomial basis. For mode 2, it is interesting to notice that the median error is first constant around $0.02$ while increasing the training size, and starts decreasing beginning from a certain training size threshold. This threshold is smaller for the Stieltjet prediction than for the Hermite prediction. As for the confidence intervals, they tighten first but then start to diverge again when the training size becomes big. This is associated to the fact the the increase of the training size implies the decrease of the prediction size. For example, for a training size of $60$ members, only $4$ prediction members are left, such that a random pick of $2$ extreme members makes the error swing to its upper bound, which of course is the worst case scenario.\\
+
+For the third mode which is a less \og regular \fg{} signal than the first two (Figure \ref{fig:PCE:comparison}), the convergence of the training error occurs around size 45 for the model using the Stieltjet orthonormalization, and a tightening of the confidence intervals is noticed as well. However, the convergence is not necessarely garanteed for the model using the Hermite basis, even though the error evolves in the same range. The prediction errors decrease rate with the increase of the prediction set is considerable. The sucession of tightening and widening for the confidence intervals is also noticed here
+
+
+\subsubsection{Sensitivity analysis}
+\label{subsection:PCE:sensitivity}
+
+The calibrated PCE models $H_i^P$, using the Stieltjes orthonormalization for the first four temporal coefficients are presented in Eq. \ref{eq:result:PCEmodels}. The meaning of the variables can be found in Table \ref{table:results:sensitivity:weights}.
+
+\begin{equation}
+  \left \{
+  \begin{tabular}{m{1cm} m{20cm}}
+  %\begin{aligned}             *
+    $a_{1}(t_{j})=$ & $ 0.102062 + 0.0155923 * (0.976423 * a_{1}(t_{j-1})) - 0.00225915 * (0.921002 * WvH) $ \\
+    & \\
+    $a_{2}(t_{j})=$ & $ -0.0462663 + 0.108906 * (0.959808 * a_{2}(t_{j-1})) - 0.00864617 * (0.921002 * WvH) $ \\
+    & \\
+    $a_{3}(t_{j})=$ & $ -0.0141931 + 0.102374 * (0.925898 * a_{3}(t_{j-1})) + 0.0177687 * (0.921002 * WvH)$ \\
+    & $+ 0.00145567 * ((0.97073 * Wv2m) * (0.989947 * Wv2m\%)) $ \\
+    & \\
+    $a_{4}(t_{j})=$ & $ 0.105525 * (0.982557 * a_{4}(t_{j-1})) - 0.013184 * (0.921002 * WvH)$ \\
+    & $+ 1.9616e-05 * ((0.982557 * a_{4}(t_{j-1})) * (0.97073 * Wv2m) * (0.989947 * Wv2m\%))$ \\ 
+     \iffalse & $+ 0.0113124 * ((0.921002 * WvH) * (-1.24409 - 2.29234 * Wv2m\% + 1.2192 * Wv2m\%^2)) $ \\
+    & \\
+    $a_{5}(t_{j})=$ & $ 0.119849 * (0.973923 * a_{5}(t_{j-1}))$ \\
+    & $+ 0.000969573 * ((0.973923 * a_{5}(t_{j-1})) * (0.921002 * WvH) * (0.97073 * Wv2m) * (0.989947 * Wv2m\%)) $ \\
+    & \\
+    $a_{6}(t_{j})=$ & $ 0.0240842 + 0.0911753 * (0.897064 * a_{6}(t_{j-1})) $ \\
+    & \\
+    $a_{7}(t_{j})=$ & $ 0.0129939 + 0.109939 * (0.894531 * a_{7}(t_{j-1})) - 0.0230955 * (0.921002 * WvH) $ \\
+    & \\ \fi
+
+  \end{tabular}     
+  \right.
+  \label{eq:result:PCEmodels}
+\end{equation}
+
+The associated weights are calculated as in Eq. \ref{eq:sensitivity:weights} and are presented in Table \ref{table:results:sensitivity:weights}.
+
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+\begin{table}[pos=H]
+  \begin{tabular}{|M{0.6cm}|M{1.5cm}|M{8cm}|M{1.5cm}|}
+    \hline
+    Mode & Explained variance & Stieltjes Polynomial term & Weight \\
+    \hline
+    1 &  94.55  $\%$ & $0.976423 * a_{1}(t_{j-1})$ & 0.87345 \\
+    &  & $0.921002 * WvH$ & 0.12655 \\
+    \hline
+    2 &  2.56  $\%$ & $0.959808 * a_{2}(t_{j-1})$ & 0.92645 \\
+    &  & $0.921002 * WvH$ & 0.07355 \\
+    \hline
+    3 &  0.42  $\%$ & $0.925898 * a_{3}(t_{j-1})$ & 0.8419 \\
+    &  & $0.921002 * WvH$ & 0.14613 \\
+    &  & $(0.97073 * Wv2m) * (0.989947 * Wv2m\%)$ & 0.01197 \\
+    \hline
+    4 &  0.38  $\%$ & $0.982557 * a_{4}(t_{j-1})$ & 0.81147 \\
+    &  & $0.921002 * WvH$ & 0.10138 \\
+    &  & $(0.921002 * WvH) * (-1.24409 - 2.29234 * Wv2m\% + 1.2192 * Wv2m\%^2)$ & 0.08699 \\
+    &  & $(0.982557 * a_{4}(t_{j-1})) * (0.97073 * Wv2m) * (0.989947 * Wv2m\%)$ & 0.00015 \\
+    \hline
+    \iffalse 5 &  0.34  $\%$ & $0.973923 * a_{5}(t_{j-1})$ & 0.99197 \\
+    &  & $(0.973923 * a_{5}(t_{j-1})) * (0.921002 * WvH) * (0.97073 * Wv2m) * (0.989947 * Wv2m\%)$ & 0.00803 \\
+    \hline
+    6 &  0.26  $\%$ & $0.897064 * a_{6}(t_{j-1})$ & 1.0 \\
+    \hline
+    7 &  0.22  $\%$ & $0.894531 * a_{7}(t_{j-1})$ & 0.8264 \\
+    &  & $0.921002 * WvH$ & 0.1736 \\
+    \hline \fi
+
+  \end{tabular}
+  \caption{Polynomial terms of the calibrated PCE models ordered by their influence using the weights defined in Eq. \ref{eq:sensitivity:weights}. Also shown are the explained variance percentages for each learned POD mode.}
+  \label{table:results:sensitivity:weights}
+\end{table}
+
+
+
+For all the calibrated PCE model, the most influencing contributor by far is the value of the previous state $a_k(t_{j-1})$. It is followed by contributions involving the mean wave height during the silting period $WvH$ for all the modes, which makes the waves most influencing natural forcing phenomena.  Further more, a third order forcing from meteorological information appears as an interaction between the mean wave height $WvH$, the mean wave height exceeding $2m$ (the $90th$ percentile over the recorded three-hourly waves) denoted by $Wv2m$ and the associated frequency $Wv2m\%$. This term represents the influence of storm events that. None of the other forcing variables appear in the polynomial expansion for the first four modes. \\
+
+In order to assess the general contribution of the inputs on the output, we rank all the contributions in relation to each other by calculating the generalized weights as presented in Eq. \ref{eq:sensitivity:generalizedWeights}, for the $15$ first modes. For easier identification, the previous calculated weights are called \og specific weights \fg{}.  The results are shown in Table \ref{table:results:sensitivity:generalizedWeights}. 
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+\begin{table}[pos=H]
+  \begin{tabular}{|M{5.5cm}|M{3cm}|M{2cm}|M{0.8cm}|M{3cm}|}
+    \hline
+    Stieltjet polynomial term & Generalized weight & Total & Mode & Specific weight \\
+    \hline
+    $0.976423 * a_{1}(t_{j-1})$ & 0.51046 & 0.51046 & 1 & 0.87345 \\
+    \hline
+    $0.959808 * a_{2}(t_{j-1})$ & 0.08915 & 0.59961 & 2 & 0.92645 \\
+    \hline
+    $0.921002 * WvH$ & 0.07396 & 0.67357 & 1 & 0.12655 \\
+    \hline
+    $0.973923 * a_{5}(t_{j-1})$ & 0.03464 & 0.70821 & 5 & 0.99197 \\
+    \hline
+    $0.925898 * a_{3}(t_{j-1})$ & 0.03275 & 0.74096 & 3 & 0.8419 \\
+    \hline
+    $0.897064 * a_{6}(t_{j-1})$ & 0.03036 & 0.77132 & 6 & 1.0 \\
+    \hline
+    $0.982557 * a_{4}(t_{j-1})$ & 0.03018 & 0.8015 & 4 & 0.81147 \\
+    \hline
+    $0.948948 * a_{8}(t_{j-1})$ & 0.02446 & 0.82596 & 8 & 1.0 \\
+    \hline
+    $0.894531 * a_{7}(t_{j-1})$ & 0.0233 & 0.84926 & 7 & 0.8264 \\
+    \hline
+    $0.895061 * a_{9}(t_{j-1})$ & 0.02316 & 0.87242 & 9 & 1.0 \\
+    \hline
+    $0.966719 * a_{10}(t_{j-1})$ & 0.02106 & 0.89348 & 10 & 1.0 \\
+    \hline
+    $0.96413 * a_{11}(t_{j-1})$ & 0.02007 & 0.91355 & 11 & 1.0 \\
+    \hline
+    $(0.876775 * a_{13}(t_{j-1})) * (0.921002 * WvH) * (0.973948 * Wvdir) * (0.888974 * Wvper) * (-1.24409 - 2.29234 * Wv2m\% + 1.2192 * Wv2m\%^2)$ & 0.01589 & 0.92944 & 13 & 1.0 \\
+    \hline
+    $0.888974 * Wvper$ & 0.01247 & 0.94191 & 15 & 1.0 \\
+    \hline
+    $0.950297 * a_{14}(t_{j-1})$ & 0.01194 & 0.95385 & 14 & 0.87217 \\
+    \hline
+    $0.921002 * WvH$ & 0.00708 & 0.96093 & 2 & 0.07355 \\
+    \hline
+    $0.921002 * WvH$ & 0.00568 & 0.96661 & 3 & 0.14613 \\
+    \hline
+    $0.921002 * WvH$ & 0.0049 & 0.97151 & 7 & 0.1736 \\
+    \hline
+    $0.921002 * WvH$ & 0.00377 & 0.97528 & 4 & 0.10138 \\
+    \hline
+    $(0.921002 * WvH) * (-1.24409 - 2.29234 * Wv2m\% + 1.2192 * Wv2m\%^2)$ & 0.00324 & 0.97852 & 4 & 0.08699 \\
+    \hline
+    $(0.921002 * WvH) * (0.888974 * Wvper) * (-1.24409 - 2.29234 * Wv2m\% + 1.2192 * Wv2m\%^2)$ & 0.00111 & 0.97963 & 14 & 0.08114 \\
+    \hline
+    $(0.950297 * a_{14}(t_{j-1})) * (-0.726048 - 0.260257 * Wvper + 0.573778 * Wvper^2) * (-0.531129 + 0.383623 * TLmean + 0.476254 * TLmean^2)$ & 0.00064 & 0.98027 & 14 & 0.04669 \\
+    \hline
+    $(0.97073 * Wv2m) * (0.989947 * Wv2m\%)$ & 0.00047 & 0.98074 & 3 & 0.01197 \\
+    \hline
+    $(0.973923 * a_{5}(t_{j-1})) * (0.921002 * WvH) * (0.97073 * Wv2m) * (0.989947 * Wv2m\%)$ & 0.00028 & 0.98102 & 5 & 0.00803 \\
+    \hline
+    $(0.982557 * a_{4}(t_{j-1})) * (0.97073 * Wv2m) * (0.989947 * Wv2m\%)$ & 1e-05 & 0.98103 & 4 & 0.00015 \\
+    \hline
+  \end{tabular}
+  \caption{Polynomial terms of calibrated PCE models for the $15$ first modes ordered by their influence using the generalized weights in \ref{eq:sensitivity:generalizedWeights}. Also shown are the \og specific weights \fg{} which designate the mode related weights using Eq. \ref{eq:sensitivity:weights} as in Table \ref{table:results:sensitivity:weights}.}
+  \label{table:results:sensitivity:generalizedWeights}
+\end{table}
+
+
+It is clear that the terms $a_k(t_{j-1})$ are globally the most influencing. They are at first position for all the modes, either by a first order contribution or in the form of an interaction with another variable, except for mode $12$ which is approximated by its mean and mode 15 which is linearized with the mean wave period variable $Wvper$. This ranking is relevent for this specific training set of size $50$ composed of the first events in historical order of occurence. To check the robustness of the observed contributions to the variations of the training set, various learnings with 20 random picks among the data, always of training size equal to $50$, are performed. The deduced distributions of the specific weights of the Stieltjet polynomial term of degree 1 involving $a_k(t_{j-1})$ for mode $k$ are shown in the Figure \ref{fig:PCE:sensitivity:specificWeights}. For modes 1 to 4, the median weights (quartile 50) are always strictly below $1$ with density functions that are centered around the median and a small standard deviation for modes 1, 2 and 4. This means that whatever the configuration, the previous value is never the only variable that approaches the output for the first four modes. 
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+  \includegraphics[trim={0cm 0cm 0cm 0cm},clip,scale=0.6]{figs/results/PCE/sensitivity/apriori-Stieltjes/specificWeightViolin.png}
+  \caption{Probability density functions of the specific mode weights associated to the polynomial term $a_k(t_{j-1})$. The considered training size is 50 using 20 different random picks for each size.}
+    \label{fig:PCE:sensitivity:specificWeights}
+\end{figure}
+
+For comparison, the PDFs of the specific weights associated to the polynomial term of degree one associated to variable $WvH$ are shown in the Figure \ref{fig:PCE:sensitivity:WvHspecificWeights}. The median values of the specific weights for the first four modes are between $10$ and $25\%$. 
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+  \includegraphics[trim={0cm 0cm 0cm 0cm},clip,scale=0.6]{figs/results/PCE/sensitivity/apriori-Stieltjes/WvHspecificWeightViolin.png}
+  \caption{Probability density functions of the specific mode weights associated to the polynomial term $WvH$. The considered training size is 50 using 20 different random picks for each size.}
+    \label{fig:PCE:sensitivity:WvHspecificWeights}
+\end{figure}
+
+
+Conversely, starting from mode 5, the probabily of occurence for value $1$ for $a_k(t_{j-1})$ specific weight seems to be larger, and the median values have greater chances falling around value 1, which means that the associated polynomial models only rely on the last recorded value of the mode for the future guess, as the related variances are so small that the best fit is a linearization. Additionnaly, the P25-P75 confidence interval moved to the upper bound of the density function. \\
+           
+Table \ref{table:results:sensitivity:generalizedWeights} also shows that, exceptionnaly, the wave height variable $WvH$ figures in the third position among all the forcings with a contribution of $7.4\%$ present in the first mode's polynomial. In total, the variable $WvH$ is present with a $9.6\%$ influence weight for the 15 modes as a first order contribution, and $11.6\%$ if interactions are taken into account, which insists on the importance of waves in the observed sediment dynamics. For comparison, the total weight of terms involving the tidal information is only around $0.06\%$. This does not necessarily mean that the tides have no influence on the silting. It may simply suggest that in the present configuration, the sediment mobilization implied by the tides is always more or less the same, and that the forcing that makes a real difference is the variation of the wave heights. \\
+
+It is also important to remind that, in the case of physically dependent variables, the iterative process used by LARS may drop a variable that is physically important because the important information is already contained in another variable, due to their dependancy. For example, it is known that the tides play a physical role in the mobilization of sediments via shear stress, but the tidal level can also be correlated to wave heights, specifically in nearshore configurations. 
+
+\subsection{POD-PCE prediction and analysis}
+\label{subsection:couplingResult}
+
+After performing both POD and PCE independantely, the accuracy of a Machine Learning process using a POD-PCE coupling is assessed as introduced in Section \ref{section:methodology}. In this analysis, the first $50$ historical siltings are used for training and the last $14$ for forecasting assessment.
+
+\subsubsection{Error estimation of the prediction}
+\label{subsection:prediction:errors}
+In order to track the errors that are generated by the different steps of the algorithm (POD, PCE and coupling), a relative RMSE (as defined in Eq. \ref{eq:timeAveragedRelativeRMSE}) is calculated for each step and for each approximation rank, as follows:
+\begin{itemize}
+\item Reduction error at rank $d$: the relative RMSE between the POD approximation $\sum_{k=1}^{d} a_k(t)\Phi_k(x)$ and the corresponding measured bathymetry $Z(x,t)$;
+\item Learning error at rank $d$: the relative RMSE between the bathymetry prediction using the POD-PCE coupling  $\sum_{k=1}^{d} H_k(t)\Phi_k(x)$ and the POD approximation$\sum_{k=1}^{d} a_k(t)\Phi_k(x)$;
+  \item Prediction error at rank $d$: the resulting final error between the prediction using POD-PCE coupling $\sum_{k=1}^{d} H_k(t)\Phi_k(x)$ and the corresponding measured bathymetry $Z(x,t)$. \\
+  \end{itemize}
+
+These errors are calculated on the prediction set and averaged in time. The results are compared in the Figure \ref{fig:Prediction:errors}.
+
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+  \includegraphics[trim={0cm 0cm 0cm 0.5cm},clip,scale=0.7]{figs/results/Prediction/errors/aprioriStieltjes/algoErrors.png}
+    \caption{The time-averaged errors generated by the reduction and the learning, and the resulting prediction errors for different approximation ranks.}
+    \label{fig:Prediction:errors}
+\end{figure}
+
+The reduction error decreases from 16\% to around 3\% while increasing the approximation rank. The error follows a logarithmic trend, with a convergence point around rank 15. \\
+
+The learning error increases with the number of modes, which is natural. In fact, in the prediction process, the modes are added in order to give a forecasting of a given rank $d$ as follows $Z(x,t) \approx \sum_{i=1}^d a_i(t) * \phi (x) \approx \sum_{i=1}^d H_i^P* \phi (x)$. For each mode $a_i(t)$, approximation with the model $H_i^P(t)$ results in a residual $\epsilon_i(t) = a_i(t) - H_i^P(t)$. Therefore, residuals  of each mode $a_i(t)$ prediction are added when increasing the approximation rank $d$. The distance between the POD linearization $\sum_{i=1}^d a_i(t) * \phi (x)$ and the approximation $\sum_{i=1}^d H_i(t) * \phi (x)$ increases with rank $d$. In the Figure \ref{fig:Prediction:errors}, the learning error is lower than 2\% for the prediction of the first two modes, and increases due to the increase of the complexity of the model. \\
+
+The prediction error is the result of accuracy increase on the first hand when adding POD modes, and forecasting error increase on the other hand when increasing the number of functions to be predicted. Consequently, the prediction error decreases from 16 to 10\% up to rank 3, following the same decreasing trend as the reduction error. However, the decrease rate becomes slower, and is increasingly subdued because it is overtaken by the learning errors beginning from rank 15. In fact, the learning error becomes greater than the reduction error from around rank 15. Therefore, the average prediction error value is minimum 7\% and does not decrease anymore starting from rank 15. \\
+
+An error interval over the prediction phase is also calculated. It is retrieved by calculating the relative RMSE of the POD-PCE forecasting for each date from the prediction set. For the optimal predictions (rank 15), the relative RMSE varies from 5 to 9\%. \\
+
+
+It was however noticed in the sensitivity study of the learned polynomial chaos models, that the prediction of modes $a_k(t_{j})$ highly rely on the information from the last recorded state $a_k(t_{j-1})$ as an input variable. Further more, when varying the training set using random picks, this input variables appears to be often the only contributer in modes of high ranks (starting from rank 5). The other polynomial terms that appear in the expansion, as summazied in Table \ref{table:results:sensitivity:generalizedWeights}, are not robust enough to the variations of the learning set. Further more, they are associated to low sensitivity generalized weights, and are often polynomials of higher degrees, which further implifies the uncertainty propagation from input to output through the forecasting process. 
+
+In order to assess the influence of these polynomial terms that we qualify as noisy, a \og corrected \fg{} prediction process is proposed as in \ref{eq:correctedPrediction}, where the added terms $L_k(a_k(t_{j-1}))$ are polynomial chaos expansions of degree 1, using only the variable $a_k(t_{j-1})$, i.e linearization of the modes around their previous value. Here, LARS may choose either the mean, a strict persistence model $a_k(t_j) = a_k(t_{j-1})$, or a combination $a_k(t_j) = \alpha + \beta \times a_k(t_{j-1})$. 
+
+\begin{equation}
+  \label{eq:correctedPrediction}
+  \centering
+    Z(x_i,t_j) = \sum_{k=1}^{d} H_k(t_j)\Phi_k(x_i) + \sum_{k=d1}^{d'} L_k(a_k(t_{j-1}))\Phi_k(x_i)
+\end{equation}
+
+In order to determin the optimal couple $(d,d')$ that provides the best prediction, the average RMSE over the 14 prediction dates is calculated for $0<d \leq 15$ and $d \leq d'\leq N_t$. When $d=d'$, no term is added to the original prediction. The result is shown in the Figure \ref{fig:Prediction:correctedRMSETable}.
+
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+  \includegraphics[trim={0cm 0cm 0cm 0cm},clip,scale=0.45]{figs/results/Prediction/errors/aprioriStieltjes/correctedPrediction-RMSEtable.png}
+  \caption{Map plot of the time averaged RMSE between the POD-PCE prediction and then real bathymetry field, as a function of the predicted mode number $d$ and the additional modes number up to $d'$.}
+    \label{fig:Prediction:correctedRMSETable}
+\end{figure}
+
+An optimum seems to be reached around $d=4$ or with $d'$ taking a value between $20$ and $40$. For a clear comparison, the RMSE for specific ranks $d$ are plotted in the Figure \ref{fig:Prediction:correctedRMSE}.
+
+\begin{figure}[pos=H]
+  \centering
+  %gauche bas droite haut
+  \subfloat[][Full plot]{\includegraphics[trim={0cm 1.62cm 0cm 0cm},clip,scale=0.6]{figs/results/Prediction/errors/aprioriStieltjes/compareCorrectedPredictionRMSE.png}} \\
+  \vspace{-0.3cm}
+    \hspace{-0.35cm} \subfloat[][Zoomed plot]{\includegraphics[trim={0cm 0cm 0cm 0cm},clip,scale=0.62]{figs/results/Prediction/errors/aprioriStieltjes/compareCorrectedPredictionRMSE-zoom.png}}
+    \caption{The time averaged RMSE between the POD-PCE prediction and then real bathymetry field for various prediction ranks $d$, as a function the additional modes number up to $d'$. }
+    \label{fig:Prediction:correctedRMSE}
+\end{figure}
+
+For a prediction with a total of 15 terms, the Figure \ref{fig:Prediction:correctedRMSE}-a shows that it is more interesting to predict only the first mode using forcing information and to add linearizations of the others, than to predict the whole 15 terms using PCE. Additionnaly, the absolute optimal value for the couple $(d,d')$, retrieved from the Figure \ref{fig:Prediction:correctedRMSE}-b, is equal to $(4,30)$. While varying the number of added terms $d'$, a 4-Modes prediction seems to be always optimal. 
+
+
+The relative RMSE calculated on each of the $14$ prediction dates forecasting are compared for the previous prediction $(d,d')=(15,0)$ and the corrected one $(d,d')=(4,30)$. The result is shown in the Figure \ref{fig:Prediction:correctedRMSE}, showing that it is always interesting to use the corrected prediction, and that a gain of $1.5\%$ RMSE is sometimes performed. 
+
+\begin{figure}[pos=H]
+  \centering
+  %gauche bas droite haut
+  \includegraphics[trim={0cm 0cm 0cm 0cm},clip,scale=0.6]{figs/results/Prediction/errors/aprioriStieltjes/datesRMSE.png}
+    \caption{The relative RMSE for each prediction date with the initial and the corrected POD-PCE models. }
+    \label{fig:Prediction:correctedRMSE}
+\end{figure}
+
+
+In order to determin if this prediction is satisfying, the real and predicted silting rates are compared in the Figure \ref{} and calculated, for time $t_j$ representing the silting over $[t_{j-1},t_j]$, as: \\  $\frac{1}{N} \sum_{i=1}^{N} \dfrac{Max(Z(x_i,t_j) - Z(x_i,t_{j-1}),0)}{|Z(x_i,t_j)|}$.
+
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+  \includegraphics[trim={0cm 0cm 0cm 0cm},clip,scale=0.7]{figs/results/Prediction/errors/aprioriStieltjes/siltingRates.png}
+    \caption{A comparison between the real silting rates and the POD-PCE prediction of this silting with $(d,d')=(4,30)$.}
+    \label{fig:Prediction:siltingRates}
+\end{figure}
+
+The POD-PCE prediction seems to follow the real silting trend, from example from dates 1 to 8. However, half of the silting can be missed, for example for dates 10 and 11. The considered inputs probably do not account for all the important forcing phenomena. For example, while only the $90th$ percentile of wave height is chosen to represent the storm events, a greater amount of percentiles could have been used not only to represent the wave information but also the tidal information over the silting period. 
+
+
+%To begin with, in order to investigate the reasons behind the underestimation errors being greater than 50\% of the silting for dates 2, 5 and 13, two input parameters are plotted in the Figure \ref{fig:Prediction:interpretation:bigErrors}. For date 13 with the greatest errors, wave height data is available only 1 over the 17 days of the silting period. This causes the wave indicators to be biased ($H-mean$, $H-var$, $H-mean->2m$, $\%-H->2m$, as seen in Subsection \ref{subsection:data}). For date 5 with the second most important underestimation error compared to the silting rate, two reasons can be identified: first, the silting period is about $36$ days, whereas most of the silting periods on which the prediction model is calibrated are about $15$ days average. This causes the LARS algorithm to ignore the silting duration $\Delta t$ as an input variable. Second, even though the wave heights approach $2m$ for a certain day, it barely is above it, which causes the term $(H-mean->2m)^2*(\%-H->2m)^2$ to be neglected in the model $H_3(t)$. This last reason is also behind the errors of date 2, and can probably explain the overall half silting underestimation over the prediction dates. In fact, the considered input variables may be not representative enough of the variations of the hydrodynamics and the meteorological conditions over the silting period. We could imagine for example that the wave height variations could be modeled with more than one threshold.
+
+%\begin{figure}[pos=H]
+%  \centering
+%   %gauche bas droite haut
+%  \subfloat[][Date 2]{\includegraphics[trim={0cm 0cm 0cm 0cm},clip,scale=0.4]{figs/results/Prediction/interpretation/11-WaveTide2016-04-1.png}}
+%  \subfloat[][Date 5]{\includegraphics[trim={2.1cm 0cm 0cm 0cm},clip,scale=0.4]{figs/results/Prediction/interpretation/11-WaveTide2017-05-10.png}}
+%    \caption{Representation of some input variables over the silting periods, between the prediction date $t_j$ and the previous bathymetry measurement $t_{j-1}$, for different prediction dates.}
+%    \label{fig:Prediction:interpretation:bigErrors}
+%\end{figure}
+
+\subsubsection{Spatial details of the predictions}
+
+In order to assess the spatial behavior of the POD-PCE prediction algorithm, some bathymetry profiles are plotted in the Figures \ref{fig:Prediction:spatial:profiles1} and \ref{fig:Prediction:spatial:profiles2}.
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+  \subfloat[][P2-D1]{\includegraphics[trim={1cm 0cm 1cm 1.5cm},clip,scale=0.4]{figs/results/Prediction/spatial/correctedProfiles/2016-10-17_P2.png}}
+  \subfloat[][P2-D4]{\includegraphics[trim={1.5cm 0cm 1cm 1.5cm},clip,scale=0.4]{figs/results/Prediction/spatial/correctedProfiles/2016-11-30_P2.png}} \\
+  \subfloat[][P5-D1]{\includegraphics[trim={1cm 0cm 1cm 1.5cm},clip,scale=0.4]{figs/results/Prediction/spatial/correctedProfiles/2016-10-17_P5.png}}
+  \subfloat[][P5-D4]{\includegraphics[trim={1.5cm 0cm 1cm 1.5cm},clip,scale=0.4]{figs/results/Prediction/spatial/correctedProfiles/2016-11-30_P5.png}} \\
+  \subfloat[][P12-D1]{\includegraphics[trim={1cm 0cm 1cm 1.5cm},clip,scale=0.4]{figs/results/Prediction/spatial/correctedProfiles/2016-10-17_P12.png}}
+  \subfloat[][P12-D4]{\includegraphics[trim={1.5cm 0cm 1cm 1.5cm},clip,scale=0.4]{figs/results/Prediction/spatial/correctedProfiles/2016-11-30_P12.png}}
+    \caption{Assessment of the $(d=5,d'=42)$-POD-PCE prediction algorithm on some characteristic profiles of the channel. For example, the Figure $P2-D1$ refers to Profile number 2 for Date 1.}
+    \label{fig:Prediction:spatial:profiles1}
+\end{figure}
+
+In accordance with the conclusions about the Figure \ref{fig:Prediction:siltingRates}, the prediction algorithm seems to capture the various silting ranges, as shown by comparing the profiles for Dates 1 and 4. It can also be noticed that a slight artificial silting is however present when there is no movement in reality, as in the Figure \ref{fig:Prediction:spatial:profiles1}-a. Next, many things can be deduced from the plots of Date 4. First, Profile 2 seems to be well silted in average, even though the silting is slightely underestimated in the right bank portion of the profile and slightely overestimated in the left bank portion. This means that even though the details of the silting are not perfectly captured, the value of the predicted wet surface is reflective enough of reality. It can also be concluded that the way the RMSE and relative errors are averaged in space, for example as represented in the Figure \ref{fig:Prediction:correctedRMSE}, actually penalizes the accuracy of the algorithm because it doesn't account for the prediction that although being imprecise still oscillates around an accurate mean.  \\
+
+Another interesting property is that the mean deposition is represented enough, but some details and specific characteristics of the bathymetry inaccurately linger in time because of the addition of high rank modes, as the small bump that is present in Profile 5 in the previous measurement and persistents in the prediction (Figure \ref{fig:Prediction:spatial:profiles1}-d, from distance 20 to 25 m). Last, some spatial variations are not captured, like the formation of a bump in Profile 12 (Figure \ref{fig:Prediction:spatial:profiles1}-f, from distance 30 to 35 m). It is in fact too specific to this date and is not represented by the significant POD modes. 
+
+
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+  \subfloat[][P19-D4]{\includegraphics[trim={1cm 0cm 1cm 1.5cm},clip,scale=0.4]{figs/results/Prediction/spatial/correctedProfiles/2016-11-30_P19.png}}
+  \subfloat[][P21-D4]{\includegraphics[trim={1.5cm 0cm 1cm 1.5cm},clip,scale=0.4]{figs/results/Prediction/spatial/correctedProfiles/2016-11-30_P21.png}} \\
+  \subfloat[][P26-D6]{\includegraphics[trim={1cm 0cm 1cm 1.5cm},clip,scale=0.4]{figs/results/Prediction/spatial/correctedProfiles/2017-01-16_P26.png}}
+  \subfloat[][P35-D11]{\includegraphics[trim={1.5cm 0cm 1cm 1.5cm},clip,scale=0.4]{figs/results/Prediction/spatial/correctedProfiles/2017-05-10_P35.png}}
+    \caption{Assessment of the $(d=5,d'=42)$-POD-PCE prediction algorithm on some characteristic profiles.}
+    \label{fig:Prediction:spatial:profiles2}
+\end{figure}
+
+Other interesting properties can be deduced from the profiles in the Figure \ref{fig:Prediction:spatial:profiles2}. For example, the prediction algorithm captures that the siltation mainly occurs in the right bank, in the bending part of the channel (Figures a and b) and in the left bank after the bend (Figure c). Furthermore, even though the movement amplitudes are sometimes underestimated, the algorithm may still capture a swing in the profile form, for example in the Figure \ref{fig:Prediction:spatial:profiles2}-d, where there is erosion in the right bank and silting in the left bank.
+
+%\begin{figure}[pos=H]
+%  \centering
+%   %gauche bas droite haut
+%  \subfloat[][P30-D1]{\includegraphics[trim={1.5cm 0cm 1cm 1.5cm},clip,scale=0.4]{figs/results/Prediction/spatial/correctedProfiles/2016-10-17_P30.png}}
+%  \subfloat[][P30-D4]{\includegraphics[trim={2.5cm 0cm 1cm 1.5cm},clip,scale=0.4]{figs/results/Prediction/spatial/correctedProfiles/2016-11-30_P30.png}} \\
+%  \subfloat[][P34-D1]{\includegraphics[trim={1.5cm 0cm 1cm 1.5cm},clip,scale=0.4]{figs/results/Prediction/spatial/correctedProfiles/2016-10-17_P34.png}}
+%  \subfloat[][P34-D4]{\includegraphics[trim={2.5cm 0cm 1cm 1.5cm},clip,scale=0.4]{figs/results/Prediction/spatial/correctedProfiles/2016-11-30_P34.png}} \\
+%  \subfloat[][P36-D1]{\includegraphics[trim={1.5cm 0cm 1cm 1.5cm},clip,scale=0.4]{figs/results/Prediction/spatial/correctedProfiles/2016-10-17_P36.png}}
+%  \subfloat[][P36-D4]{\includegraphics[trim={2.5cm 0cm 1cm 1.5cm},clip,scale=0.4]{figs/results/Prediction/spatial/correctedProfiles/2016-11-30_P36.png}}
+%    \caption{Assessment of the $(d=5,d'=42)$-POD-PCE prediction algorithm on some characteristic profiles in the last portion of the channel, in front of the pumps.}
+%    \label{fig:Prediction:spatial:profiles3}
+%\end{figure}
+
+\end{document}
+
+
+\iffalse
+ The numbering of profiles can be found in the Figure \ref{fig:Prediction:spatial:siltings}-a. 
+
+
+the predicted silting rates are compared to the real siltings calculated in the channel as $\dfrac{Z(x_i,t_j) - Z(x_i,t_{j-1}))}{|Z(x_i,t_j)|}$ for dates 1, 3 and 4 in the Figure \ref{fig:Prediction:spatial:siltings}. These rates represent deposition when positive and erosion when negative. First, it can be noticed that the initial POD-PCE prediction without additional terms $(d=15,d'=d)$ is often inaccurate, as it sometimes makes deposition where there is erosion and vice-versa, for example for Date 10 where the contrast can be seen between the Figures \ref{fig:Prediction:spatial:siltings}-d and \ref{fig:Prediction:spatial:siltings}-i that resp. represent the real silting and the $(d=15,d'=d)$-POD-PCE predicted silting. For this particular example, the $(d=5,d'=42)$-POD-PCE prediction gives far more satisfying results. 
+
+\begin{figure}[pos=H]
+  \centering
+   %gauche bas droite haut
+  \subfloat[][Real silting: Date 1]{\includegraphics[trim={20cm 8cm 0cm 8cm},clip,scale=0.07]{figs/results/Prediction/spatial/1-2016-10-17_silting_Pnumbers.png}}
+  \subfloat[][Date 3]{\includegraphics[trim={5cm 2cm 4cm 2cm},clip,scale=0.35]{figs/results/Prediction/spatial/3-2016-11-15_silting.png}}
+  \subfloat[][Date 4]{\includegraphics[trim={5cm 2cm 4cm 2cm},clip,scale=0.35]{figs/results/Prediction/spatial/4-2016-11-30_silting.png}}
+  \subfloat[][Date 10]{\includegraphics[trim={5cm 2cm 4cm 2cm},clip,scale=0.35]{figs/results/Prediction/spatial/10-2017-04-11_silting.png}}
+  \subfloat[][Date 12]{\includegraphics[trim={5cm 2cm 4cm 2cm},clip,scale=0.35]{figs/results/Prediction/spatial/12-2017-05-24_silting.png}}  \\
+  \subfloat[][$(d=15,d'=d)$]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.35]{figs/results/Prediction/spatial/1-2016-10-17_siltingPrediction.png}}
+  \hspace{0.28cm} \subfloat[][$(d=15,d'=d)$]{\includegraphics[trim={5cm 2cm 4cm 2cm},clip,scale=0.35]{figs/results/Prediction/spatial/3-2016-11-15_siltingPrediction.png}}
+  \subfloat[][$(d=15,d'=d)$]{\includegraphics[trim={5cm 2cm 4cm 2cm},clip,scale=0.35]{figs/results/Prediction/spatial/4-2016-11-30_siltingPrediction.png}}
+  \subfloat[][$(d=15,d'=d)$]{\includegraphics[trim={5cm 2cm 4cm 2cm},clip,scale=0.35]{figs/results/Prediction/spatial/10-2017-04-11_siltingPrediction.png}}
+  \subfloat[][$(d=15,d'=d)$]{\includegraphics[trim={5cm 2cm 4cm 2cm},clip,scale=0.35]{figs/results/Prediction/spatial/12-2017-05-24_siltingPrediction.png}} \\
+  \subfloat[][$(d=5,d'=42)$]{\includegraphics[trim={4cm 2cm 4cm 2cm},clip,scale=0.35]{figs/results/Prediction/spatial/1-2016-10-17_siltingPrediction-corrected.png}}
+  \hspace{0.28cm} \subfloat[][$(d=5,d'=42)$]{\includegraphics[trim={5cm 2cm 4cm 2cm},clip,scale=0.35]{figs/results/Prediction/spatial/3-2016-11-15_siltingPrediction-corrected.png}} 
+  \subfloat[][$(d=5,d'=42)$]{\includegraphics[trim={5cm 2cm 4cm 2cm},clip,scale=0.35]{figs/results/Prediction/spatial/4-2016-11-30_siltingPrediction-corrected.png}} 
+  \subfloat[][$(d=5,d'=42)$]{\includegraphics[trim={5cm 2cm 4cm 2cm},clip,scale=0.35]{figs/results/Prediction/spatial/10-2017-04-11_siltingPrediction-corrected.png}} 
+  \subfloat[][$(d=5,d'=42)$]{\includegraphics[trim={5cm 2cm 4cm 2cm},clip,scale=0.35]{figs/results/Prediction/spatial/12-2017-05-24_siltingPrediction-corrected.png}} 
+    \caption{Comparison between the predicted silting rates using the initial POD-PCE prediction $(d=15,d'=d)$, the corrected prediction $(d=5,d'=42)$ and the real silting.}
+    \label{fig:Prediction:spatial:siltings}
+\end{figure}
+
+The $(d=5,d'=42)$-POD-PCE prediction seems to capture different silting intensities, that are for example growing from dates 1 to 3 and 4, with a very comparable geometrical distributions of the depositions. Nevertheless, there seems to be an imposed minimum silting in the prediction algorithm as the predicted silting rates are around 1 to 3\% in the middle of the channel where they should be negligible in reality. For a different geometrical distribution of the silting represented by Date 10 (\ref{fig:Prediction:spatial:siltings}-d) where an erosion is noticed in the entrance followed by a deposition (probably a moving sediment form), the $(d=5,d'=42)$-POD-PCE algorithm offers a good approximation, despite an amplitude underestimation. \\
+
+Another example of a different silting distrbution is given for Date 12, where the sediments settled mostly in front of the pumps. The $(d=5,d'=42)$-POD-PCE prediction captures this deposition but also creates unreal depositions in the entrance of the channel. This particular event can for example be explained by the presence of finer sediments that are therefore too light to deposit in the entrance. The learning process that was established did not account for the arriving sediments sizes as an input variable, as no frequent tracking is available. This unfortunately create a certain bias for the prediction of such events but also for an accurate estimation of deposition rates in the channel with more frequent distributions as in the Figures \ref{fig:Prediction:spatial:siltings}-b-c. \\
+
+Last, for a detailed comparison between reality and the prediction using the $(d=5,d'=42)$-POD-PCE algorithm
+\fi
