@@ -1,0 +1,164 @@
+%% 
+%% Copyright 2019 Elsevier Ltd
+%% 
+%% This file is part of the 'CAS Bundle'.
+%% --------------------------------------
+%% 
+%% It may be distributed under the conditions of the LaTeX Project Public
+%% License, either version 1.2 of this license or (at your option) any
+%% later version.  The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.2 or later is part of all distributions of LaTeX
+%% version 1999/12/01 or later.
+%% 
+%% The list of all files belonging to the 'CAS Bundle' is
+%% given in the file `manifest.txt'.
+%% 
+%% Template article for cas-sc documentclass for 
+%% single column output.
+
+%\documentclass[a4paper,fleqn,longmktitle]{cas-sc}
+\documentclass[a4paper,fleqn]{cas-sc}
+
+%\usepackage[numbers]{natbib}
+%\usepackage[authoryear]{natbib}
+\usepackage[authoryear,longnamesfirst]{natbib}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% My Additional packages%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{float}
+\usepackage[utf8]{inputenc}  %for french characters
+\usepackage{subfiles} %to separate tex to subfiles
+
+% *** SUBFIGURE PACKAGES ***
+%\usepackage[caption=false]{caption}
+\usepackage[font=footnotesize]{subfig}
+% *** SUBFIGURE PACKAGES ***
+%To compile subfiles independantly
+\usepackage{subfiles}
+% *** FLOAT PACKAGES ***
+%\usepackage{fixltx2e}
+
+%for \og \fg{} 
+\usepackage[frenchb]{babel}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%Author macros
+\def\tsc#1{\csdef{#1}{\textsc{\lowercase{#1}}\xspace}}
+\tsc{WGM} %eg.
+%%%
+
+\begin{document}
+\let\WriteBookmarks\relax
+\def\floatpagepagefraction{1}
+\def\textpagefraction{.001}
+\shorttitle{Authors/Journal of \dots (year)}
+\shortauthors{Authors}
+%\begin{frontmatter}
+
+\title [mode = title]{Assessment of a field-measurements based Machine Learning approach using Proper Orthogonal Decomposition and Polynomial Chaos Expansion}                      
+%\tnotemark[1,2]
+%
+%\tnotetext[1]{This document is the results of the research
+%   project funded by the National Science Foundation.}
+
+%\tnotetext[2]{The second title footnote which is a longer text matter
+%   to fill through the whole text width and overflow into
+%   another line in the footnotes area of the first page.}
+
+
+
+\author[1,2]{Rem-Sophia Mouradi}[] 
+%[type=editor,auid=000,bioid=1,prefix=Sir,role=Researcher,orcid=0000-0001-7511-2910]
+\cormark[1] %corresponding author mark
+%\fnmark[1] %footnote mark
+\ead{rem-sophia-r.mouradi@edf.fr}
+%\ead[url]{www.cvr.cc, cvr@sayahna.org}
+%\credit{Conceptualization of this study, Methodology, Software}
+
+\author[1]{Cédric Goeury}[]
+\author[2,3]{Olivier Thual}[]
+\author[1]{Fabrice Zaoui}[]
+\author[1,4]{Pablo Tassi}[]
+
+
+\address[1]{LNHE, EDF R\&D, 6 quai Watier, 78400 Chatou, France}
+\address[2]{CECI, CERFACS, CNRS, 42 avenue Gaspard Coriolis, 31820 Toulouse, France}
+\address[3]{Institut de Mécanique des Fluides de Toulouse (IMFT), Université de Toulouse, CNRS, Toulouse, France}
+\address[4]{Laboratoire Hydraulique Saint-Venant (LHSV), Chatou, France}
+
+\cortext[cor1]{Corresponding author}
+%\cortext[cor2]{Principal corresponding author}
+%\fntext[fn1]{Example of footnote.}
+%\fntext[fn2]{Another author footnote, this is a very long footnote}
+%\nonumnote{This note has no numbers}
+
+
+
+\begin{abstract}
+
+In an ever-increasing interest for Machine Learning (ML) and a favourable data development context, the famous Polynomial Chaos Expansion (PCE) in the Uncertainty Quantification field (UQ) has recently shown promising prediction characteristics for one-dimensional problems, with additional advantages such as the explicity of the models, the adaptativity to small training sets, and the associated probabilistic framework. \\
+
+Simultaneously, dimensionality reduction technics like Proper Orthogonal Decomposition (POD) are increasinly used for two-dimensional (2D) pattern recognition and have gained interest for example thanks to the increase of the quality of satellite imagery.  \\
+
+
+Needless to say that POD and PCE have widely proved their worth in their respective dedicated frameworks. The idea of the present paper is that they could as well work jointly via a simple coupling, namely for a field-measurement based forecasting of a 2D variable. That is exactly the scope of this paper.  The questions we adress are: what is the potential of POD and PCE on the analysis of field data? What are the challenges faced when using field data? Is the POD-PCE coupling promising as a ML technic for a 2D field prediction? What are the limitations faced due to small data? \\
+
+The POD-PCE coupling methodology is developped, particular interest is given to the consequences of inputs choice and characterization, training size and training individuals. A straight forward sensitivity analysis methodology is proposed for a PCE model and extended to the POD-PCE coupling. 
+
+%\noindent\texttt{\textbackslash begin{abstract}} \dots 
+%\texttt{\textbackslash end{abstract}} 
+%Each keyword shall be separated by a \verb+\sep+ command.
+
+\end{abstract}
+
+%\begin{graphicalabstract}
+%\includegraphics{figs/grabs.pdf}
+%\end{graphicalabstract}
+
+%\begin{highlights}
+%\item Research highlights item 1
+%\item Research highlights item 2
+%\item Research highlights item 3
+%\end{highlights}
+
+\begin{keywords}
+Data-Driven Model (DDM) \sep Proper Orthogonal Decomposition (POD) \sep dimensionality reduction \sep Polynomial Chaos Expansion (PCE) \sep Uncertainty Quantification (UQ) \sep Sediment dynamics \sep Morphodynamics
+\end{keywords}
+
+
+\maketitle
+
+%===========================================================================
+\subfile{Chapters/Introduction}
+%===========================================================================
+\subfile{Chapters/Application}
+%===========================================================================
+\subfile{Chapters/Materials}
+%===========================================================================
+\subfile{Chapters/Methodology}
+%===========================================================================
+\subfile{Chapters/Results}
+%===========================================================================
+%\subfile{Chapters/Discussion}
+%===========================================================================
+\subfile{Chapters/Conclusions}
+%===========================================================================
+
+%\appendix
+%\subfile{Chapters/Appendix1}
+
+%% Loading bibliography style file
+%\bibliographystyle{model1-num-names}
+\bibliographystyle{model2-names}
+
+% Loading bibliography database
+\bibliography{refs}
+
+
+
+
+
+\end{document}
+
